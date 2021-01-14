@@ -49,10 +49,24 @@ int main()
     const int SCALE = 2;
     const float SPEED = 0.5f;
 
+    const int WORLD_ARRAY_WIDTH = 43;
+    const int WORLD_ARRAY_HEIGH = 23;
+
     int POS_W = 0;
     int POS_H = 576;
 
     int WORLD_W = 0;
+
+    // Create world array
+    int world[WORLD_ARRAY_WIDTH][WORLD_ARRAY_HEIGH] = { { 0 } };
+    for (int i = 0; i < 43; i++) {
+        for (int j = 19; j < 21; j++) {
+            world[i][j] = 1;
+        }
+        for (int j = 21; j < WORLD_ARRAY_HEIGH; j++) {
+            world[i][j] = 2;
+        }
+    }
 
     sf::Sprite character(stone_texture);
 
@@ -109,9 +123,21 @@ int main()
         }
         
 
-        for (int i = 0; i <= 1280 / (16 * SCALE); i++) {
+        /*for (int i = 0; i <= 1280 / (16 * SCALE); i++) {
             for (int j = 19; j <= 720 / (16 * SCALE); j++) {
                 sf::Sprite dirt_sprite(dirt_texture);
+
+                dirt_sprite.scale(sf::Vector2f(SCALE, SCALE));
+                dirt_sprite.setPosition(i * (16 * SCALE) + WORLD_W, j * (16 * SCALE));
+
+                window.draw(dirt_sprite);
+            }
+        }*/
+        for (int i = 0; i < WORLD_ARRAY_WIDTH; i++) {
+            for (int j = 0; j < WORLD_ARRAY_HEIGH; j++) {
+                if (world[i][j] == 0)continue;
+
+                sf::Sprite dirt_sprite(world[i][j] == 1 ? dirt_texture : stone_texture);
 
                 dirt_sprite.scale(sf::Vector2f(SCALE, SCALE));
                 dirt_sprite.setPosition(i * (16 * SCALE) + WORLD_W, j * (16 * SCALE));

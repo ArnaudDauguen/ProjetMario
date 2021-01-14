@@ -1,5 +1,35 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <math.h>
+
+
+int tryMoveDown(sf::Sprite character, float travelDistance, int worldPosition, float playerSize = 32, float squareOnMapSize = 32) {
+    float posX = character.getPosition().x;
+    float worldPosY = character.getPosition().y;
+    float worldPosX = posX - worldPosition;
+
+    // getting the two down corners
+    const std::pair<float, float> firstCornerPosition = { worldPosX,  worldPosY }; // bottom left
+    const std::pair<float, float> secondCornerPosition = { worldPosX + playerSize, worldPosY }; // bottom right
+
+    // convert positions to squares on map
+    const std::pair<int, int> firstCornerSquare = { floor(firstCornerPosition.first / squareOnMapSize), floor(firstCornerPosition.second / squareOnMapSize) };
+    const std::pair<int, int> secondCornerSquare = { floor(secondCornerPosition.first / squareOnMapSize), floor(secondCornerPosition.second / squareOnMapSize) };
+
+    printf("first point [%d;%d]\n", firstCornerSquare.first, firstCornerSquare.second);
+    printf("second point [%d;%d]\n\n", secondCornerSquare.first, secondCornerSquare.second);
+
+    //Try moving // direction Down : y++
+    bool blocked = false;
+    for (int i = 1; i < ceil(travelDistance / squareOnMapSize); i++) {
+
+    }
+
+
+
+    return 0;
+}
+
 
 int main()
 {
@@ -30,7 +60,7 @@ int main()
     character.setPosition(POS_W, POS_H);
     
 
-    window.setFramerateLimit(240);
+    window.setFramerateLimit(144);
     sf::Clock clock;
 
     while (window.isOpen())
@@ -46,7 +76,8 @@ int main()
 
         sf::Time elapsed = clock.restart();
 
-        std::cout << elapsed.asMilliseconds() << std::endl;
+        //std::cout << elapsed.asMilliseconds() << std::endl;
+        tryMoveDown(character, 1, WORLD_W, 16 * SCALE, 16 * SCALE);
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
         {

@@ -3,31 +3,49 @@
 #include <math.h>
 
 
-int tryMoveDown(sf::Sprite character, float travelDistance, int worldPosition, float playerSize = 32, float squareOnMapSize = 32) {
+// once moved to class, some args will no longer be mandatory
+int tryMoveDown(sf::Sprite character, float travelDistancePlanned, int worldPosition, int (&worldMap)[43][23], int worldMapWidth, int worldMapHeigh, float playerSize = 32, float squareOnMapSize = 32) {
     float posX = character.getPosition().x;
     float worldPosY = character.getPosition().y;
     float worldPosX = posX - worldPosition;
 
     // getting the two down corners
-    const std::pair<float, float> firstCornerPosition = { worldPosX,  worldPosY }; // bottom left
-    const std::pair<float, float> secondCornerPosition = { worldPosX + playerSize, worldPosY }; // bottom right
+    const std::pair<float, float> firstCornerPosition = { worldPosX,  worldPosY + playerSize }; // bottom left
+    const std::pair<float, float> secondCornerPosition = { worldPosX + playerSize, worldPosY + playerSize }; // bottom right
 
     // convert positions to squares on map
     const std::pair<int, int> firstCornerSquare = { floor(firstCornerPosition.first / squareOnMapSize), floor(firstCornerPosition.second / squareOnMapSize) };
     const std::pair<int, int> secondCornerSquare = { floor(secondCornerPosition.first / squareOnMapSize), floor(secondCornerPosition.second / squareOnMapSize) };
+    const bool isAboveOnlyOneBlock = firstCornerSquare.first == secondCornerSquare.first;
 
-    printf("first point [%d;%d]\n", firstCornerSquare.first, firstCornerSquare.second);
-    printf("second point [%d;%d]\n\n", secondCornerSquare.first, secondCornerSquare.second);
+    //printf("\nfst point [%d;%d]\n", firstCornerSquare.first, firstCornerSquare.second);
+    //printf("scd point [%d;%d]\n", secondCornerSquare.first, secondCornerSquare.second);*/
 
     //Try moving // direction Down : y++
     bool blocked = false;
-    for (int i = 1; i < ceil(travelDistance / squareOnMapSize); i++) {
+    int blockingBlocIndex = 0;
+    for (int blocIndexInPath = 0; blocIndexInPath < ceil(travelDistancePlanned / squareOnMapSize); blocIndexInPath++) {
+        int blocIndexToTest = firstCornerSquare.second + blocIndexInPath;
+        if (blocIndexToTest >= worldMapHeigh || blocIndexToTest < 0 || firstCornerSquare.first >= worldMapWidth || firstCornerSquare.first < 0) { continue; }
+        if (worldMap[firstCornerSquare.first][blocIndexToTest] != 0) {
+            blocked = true;
+            blockingBlocIndex = blocIndexToTest;
+        }
 
+        //if above two distinct blocs
+        if (!isAboveOnlyOneBlock) {
+            if (blocIndexToTest >= worldMapHeigh || blocIndexToTest < 0 || secondCornerSquare.first >= worldMapWidth || secondCornerSquare.first < 0) { continue; }
+            if (worldMap[secondCornerSquare.first][blocIndexToTest] != 0) {
+                blocked = true;
+                blockingBlocIndex = blocIndexToTest;
+            }
+        }
     }
-
-
-
-    return 0;
+    float travelDistanceReal = blocked
+        ? (blockingBlocIndex * (int)squareOnMapSize) - firstCornerPosition.second //- squareOnMapSize
+        : travelDistancePlanned;
+    
+    return travelDistanceReal;
 }
 
 
@@ -47,30 +65,31 @@ int main()
         return EXIT_FAILURE;
 
     const int SCALE = 2;
+    const float PLAYER_SCALE = 1.75;
     const float SPEED = 0.5f;
 
-    const int WORLD_ARRAY_WIDTH = 43;
-    const int WORLD_ARRAY_HEIGH = 23;
+    const int WORLD_MAP_WIDTH = 43;
+    const int WORLD_MAP_HEIGH = 23;
 
-    int POS_W = 0;
-    int POS_H = 576;
+    int POS_W = 640;
+    int POS_H = 320;
 
     int WORLD_W = 0;
 
     // Create world array
-    int world[WORLD_ARRAY_WIDTH][WORLD_ARRAY_HEIGH] = { { 0 } };
+    int world[WORLD_MAP_WIDTH][WORLD_MAP_HEIGH] = { { 0 } };
     for (int i = 0; i < 43; i++) {
         for (int j = 19; j < 21; j++) {
             world[i][j] = 1;
         }
-        for (int j = 21; j < WORLD_ARRAY_HEIGH; j++) {
+        for (int j = 21; j < WORLD_MAP_HEIGH; j++) {
             world[i][j] = 2;
         }
     }
 
     sf::Sprite character(stone_texture);
 
-    character.scale(sf::Vector2f(SCALE, SCALE));
+    character.scale(sf::Vector2f(PLAYER_SCALE, PLAYER_SCALE));
     character.setPosition(POS_W, POS_H);
     
 
@@ -91,8 +110,12 @@ int main()
         sf::Time elapsed = clock.restart();
 
         //std::cout << elapsed.asMilliseconds() << std::endl;
-        tryMoveDown(character, 1, WORLD_W, 16 * SCALE, 16 * SCALE);
-
+        
+        // "Gravity"
+        int falling = tryMoveDown(character, 0.5f * elapsed.asMilliseconds() * SPEED, WORLD_W, world, WORLD_MAP_WIDTH, WORLD_MAP_HEIGH, 16 * PLAYER_SCALE, 16 * SCALE);
+        character.move(0.0f, falling);
+        
+        
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
         {
             character.move(-1.f * elapsed.asMilliseconds() * SPEED, 0.f);
@@ -133,8 +156,8 @@ int main()
                 window.draw(dirt_sprite);
             }
         }*/
-        for (int i = 0; i < WORLD_ARRAY_WIDTH; i++) {
-            for (int j = 0; j < WORLD_ARRAY_HEIGH; j++) {
+        for (int i = 0; i < WORLD_MAP_WIDTH; i++) {
+            for (int j = 0; j < WORLD_MAP_HEIGH; j++) {
                 if (world[i][j] == 0)continue;
 
                 sf::Sprite dirt_sprite(world[i][j] == 1 ? dirt_texture : stone_texture);

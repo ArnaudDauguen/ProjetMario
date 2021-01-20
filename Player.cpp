@@ -62,7 +62,8 @@ void Player::handleInputs(int deltaTime)
 void Player::update(int deltaTime)
 {
     // "Gravity"
-    int falling = this->TryMoveDown(this->m_speed * deltaTime);
+    // int falling = this->TryMoveDown(this->m_speed * deltaTime);
+	int falling = this->TryMoveDown(0.2f * deltaTime);
     this->m_sprite.move(0.0f, falling);
 }
 
@@ -89,9 +90,9 @@ int Player::TryMoveDown(float distance) {
     const std::pair<int, int> firstCornerSquare = { floor(firstCornerPosition.first / blockSize), floor(firstCornerPosition.second / blockSize) };
     const std::pair<int, int> secondCornerSquare = { floor(secondCornerPosition.first / blockSize), floor(secondCornerPosition.second / blockSize) };
     const bool isAboveOnlyOneBlock = firstCornerSquare.first == secondCornerSquare.first;
-
-    //printf("\nfst point [%d;%d]\n", firstCornerSquare.first, firstCornerSquare.second);
-    //printf("scd point [%d;%d]\n", secondCornerSquare.first, secondCornerSquare.second);*/
+	
+    //printf("fst point [%d;%d]\n", firstCornerSquare.first, firstCornerSquare.second);
+    //printf("scd point [%d;%d]\n\n", secondCornerSquare.first, secondCornerSquare.second);
 
     //Try moving // direction Down : y++
     bool blocked = false;
@@ -101,18 +102,20 @@ int Player::TryMoveDown(float distance) {
 	sf::Vector2i worldSize = this->m_game->world->GetSize();
     for (int blocIndexInPath = 0; blocIndexInPath < ceil(distance / blockSize); blocIndexInPath++) {
         int blocIndexToTest = firstCornerSquare.second + blocIndexInPath;
-        if (blocIndexToTest >= worldSize.y || blocIndexToTest < 0 || firstCornerSquare.first >= worldSize.x || firstCornerSquare.first < 0) { continue; }
-        if (worldBlocks[blocIndexToTest][firstCornerSquare.first] != 0) {
-            blocked = true;
-            blockingBlocIndex = blocIndexToTest;
+        if (!(blocIndexToTest >= worldSize.y || blocIndexToTest < 0 || firstCornerSquare.first >= worldSize.x || firstCornerSquare.first < 0)) {
+	        if (worldBlocks[blocIndexToTest][firstCornerSquare.first] != 0) {
+	            blocked = true;
+	            blockingBlocIndex = blocIndexToTest;
+	        }
         }
 
         //if above two distinct blocs
         if (!isAboveOnlyOneBlock) {
-            if (blocIndexToTest >= worldSize.y || blocIndexToTest < 0 || secondCornerSquare.first >= worldSize.x || secondCornerSquare.first < 0) { continue; }
-            if (worldBlocks[blocIndexToTest][secondCornerSquare.first] != 0) {
-                blocked = true;
-                blockingBlocIndex = blocIndexToTest;
+            if (!(blocIndexToTest >= worldSize.y || blocIndexToTest < 0 || secondCornerSquare.first >= worldSize.x || secondCornerSquare.first < 0)) {
+                if (worldBlocks[blocIndexToTest][secondCornerSquare.first] != 0) {
+                    blocked = true;
+                    blockingBlocIndex = blocIndexToTest;
+                }
             }
         }
     }

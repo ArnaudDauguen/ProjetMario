@@ -1,3 +1,5 @@
 Debug/
 .vs/
-ProjetMario.vcxproj*
+ProjetMario.vcxproj
+ProjetMario.vcxproj.filters
+ProjetMario.vcxproj.user

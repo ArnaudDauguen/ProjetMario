@@ -13,6 +13,10 @@ public:
 	void draw(sf::RenderWindow& window);
 
 	void Translate(float distance);
+
+	sf::Vector2f PositionOnScreenToMapPosition(sf::Vector2f positionOnScreen) const ;
+	sf::Vector2i PositionOnMapToMapBlockIndex(sf::Vector2f positionOnMap) const ;
+	sf::Vector2i PositionOnScreenToMapBlockIndex(sf::Vector2f positionOnMap) const ;
 	
 	sf::Vector2f GetPosition() const { return m_position; }
 	sf::Vector2i GetSize() const { return m_size; }
@@ -28,7 +32,10 @@ private:
 
 	int** m_blocks;
 
-	sf::Texture m_dirt_texture;
-	sf::Texture m_stone_texture;
+	sf::Texture m_player_texture;
+	const int blockTextureCount = 256;
+	sf::Texture m_blockTextures[256];
+
+	void loadTextures();
 };
 

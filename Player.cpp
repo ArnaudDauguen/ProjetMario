@@ -79,20 +79,20 @@ int Player::TryMoveDown(float distance) {
     sf::Vector2f playerSize = this->GetCharacterSize();
     int blockSize = this->m_game->world->BlockSize * this->m_game->Scale;
 	
-    float worldPosY = m_sprite.getPosition().y - this->m_game->world->GetPosition().y;
-    float worldPosX = m_sprite.getPosition().x - this->m_game->world->GetPosition().x;
+    float screenPosX = m_sprite.getPosition().x;
+    float screenPosY = m_sprite.getPosition().y;
 
     // getting the two down corners
-    const std::pair<float, float> firstCornerPosition = { worldPosX,  worldPosY + playerSize.y }; // bottom left
-    const std::pair<float, float> secondCornerPosition = { worldPosX + playerSize.x, worldPosY + playerSize.y }; // bottom right
+    const sf::Vector2f firstCornerPosition = this->m_game->world->PositionOnScreenToMapPosition({screenPosX, screenPosY + playerSize.y}); // bottom left
+    const sf::Vector2f secondCornerPosition = this->m_game->world->PositionOnScreenToMapPosition({ screenPosX + playerSize.x, screenPosY + playerSize.y }); // bottom right
 
     // convert positions to squares on map
-    const std::pair<int, int> firstCornerSquare = { floor(firstCornerPosition.first / blockSize), floor(firstCornerPosition.second / blockSize) };
-    const std::pair<int, int> secondCornerSquare = { floor(secondCornerPosition.first / blockSize), floor(secondCornerPosition.second / blockSize) };
-    const bool isAboveOnlyOneBlock = firstCornerSquare.first == secondCornerSquare.first;
+    const sf::Vector2i firstCornerSquare = this->m_game->world->PositionOnMapToMapBlockIndex(firstCornerPosition);
+    const sf::Vector2i secondCornerSquare = this->m_game->world->PositionOnMapToMapBlockIndex(secondCornerPosition);
+    const bool isAboveOnlyOneBlock = firstCornerSquare.x == secondCornerSquare.x;
 	
-    //printf("fst point [%d;%d]\n", firstCornerSquare.first, firstCornerSquare.second);
-    //printf("scd point [%d;%d]\n\n", secondCornerSquare.first, secondCornerSquare.second);
+    //printf("fst point [%d;%d]\n", firstCornerSquare.x, firstCornerSquare.y);
+    //printf("scd point [%d;%d]\n\n", secondCornerSquare.x, secondCornerSquare.y);
 
     //Try moving // direction Down : y++
     bool blocked = false;
@@ -101,9 +101,9 @@ int Player::TryMoveDown(float distance) {
     int** worldBlocks = this->m_game->world->GetBlocks();
 	sf::Vector2i worldSize = this->m_game->world->GetSize();
     for (int blocIndexInPath = 0; blocIndexInPath < ceil(distance / blockSize); blocIndexInPath++) {
-        int blocIndexToTest = firstCornerSquare.second + blocIndexInPath;
-        if (!(blocIndexToTest >= worldSize.y || blocIndexToTest < 0 || firstCornerSquare.first >= worldSize.x || firstCornerSquare.first < 0)) {
-	        if (worldBlocks[blocIndexToTest][firstCornerSquare.first] != 0) {
+        int blocIndexToTest = firstCornerSquare.y + blocIndexInPath;
+        if (!(blocIndexToTest >= worldSize.y || blocIndexToTest < 0 || firstCornerSquare.x >= worldSize.x || firstCornerSquare.x < 0)) {
+	        if (worldBlocks[blocIndexToTest][firstCornerSquare.x] != -1) {
 	            blocked = true;
 	            blockingBlocIndex = blocIndexToTest;
 	        }
@@ -111,8 +111,8 @@ int Player::TryMoveDown(float distance) {
 
         //if above two distinct blocs
         if (!isAboveOnlyOneBlock) {
-            if (!(blocIndexToTest >= worldSize.y || blocIndexToTest < 0 || secondCornerSquare.first >= worldSize.x || secondCornerSquare.first < 0)) {
-                if (worldBlocks[blocIndexToTest][secondCornerSquare.first] != 0) {
+            if (!(blocIndexToTest >= worldSize.y || blocIndexToTest < 0 || secondCornerSquare.x >= worldSize.x || secondCornerSquare.x < 0)) {
+                if (worldBlocks[blocIndexToTest][secondCornerSquare.x] != -1) {
                     blocked = true;
                     blockingBlocIndex = blocIndexToTest;
                 }
@@ -120,7 +120,7 @@ int Player::TryMoveDown(float distance) {
         }
     }
     float travelDistanceReal = blocked
-        ? (blockingBlocIndex * (int)blockSize) - firstCornerPosition.second //- squareOnMapSize
+        ? (blockingBlocIndex * (int)blockSize) - firstCornerPosition.y //- squareOnMapSize
         : distance;
 
     return travelDistanceReal;

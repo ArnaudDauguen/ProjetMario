@@ -6,7 +6,7 @@
 Game::Game(sf::RenderWindow& window) : m_window(window)
 {
 	this->world = new World(this, 43, 23);
-	this->player = new Player(this, 640, 320, 1.75f);
+	this->player = new Player(this, 640, 120, 1.75f);
 }
 
 void Game::handleInputs(int deltaTime)
@@ -20,9 +20,9 @@ void Game::update(int deltaTime)
 }
 
 void Game::draw(int deltaTime)
-{
-	this->player->draw(this->m_window);
-
+{	
 	this->world->draw(this->m_window);
+	
+	this->player->draw(this->m_window);
 }
 

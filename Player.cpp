@@ -6,6 +6,7 @@
 
 #include "Game.h"
 #include "World.h"
+#include "Collider.h"
 
 Player::Player(Game* game, int x, int y, float scale)
 {
@@ -13,58 +14,47 @@ Player::Player(Game* game, int x, int y, float scale)
     if (!this->m_texture.loadFromFile("Textures/terrain.png", sf::IntRect(0 + 16 * 0, 0 + 16 * 0, 16, 16)))
 	    std::cout << "Issue with loading the player texture" << std::endl;
 
-	m_sprite = sf::Sprite(this->m_texture);
-	m_sprite.setPosition(x, y);
-	m_sprite.scale(sf::Vector2f (scale, scale));
+	this->m_sprite = sf::Sprite(this->m_texture);
+	this->m_sprite.setPosition(x, y);
+	this->m_sprite.scale(sf::Vector2f (scale, scale));
 }
 
 void Player::handleInputs(int deltaTime)
 {
+    float deltatime = float(deltaTime);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
     {
-        const float distance = 1.f * deltaTime * this->m_speed;
-
-        const sf::Vector2f playerPosition = this->m_sprite.getPosition();
-    	
-    	if (playerPosition.x - distance < (this->m_game->GetScreenSize().x * 1 / 4))
-    	{
-            m_sprite.setPosition(this->m_game->GetScreenSize().x * 1 / 4, playerPosition.y);
-            this->m_game->m_world->Translate(distance);
-    	} else {
-            m_sprite.move(-distance, 0.f);
-    	}
+        const float distance = -1.f * deltatime * this->m_speed;
+        this->move({ distance, 0 });
     }
 	
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
     {
-        const float distance = 1.f * deltaTime * this->m_speed;
-
-        const sf::Vector2f playerPosition = this->m_sprite.getPosition();
-    	
-        if (playerPosition.x + distance > (this->m_game->GetScreenSize().x * 3 / 4))
-        {
-            m_sprite.setPosition(this->m_game->GetScreenSize().x * 3 / 4, playerPosition.y);
-            this->m_game->m_world->Translate(-distance);
-        }
-        else {
-            m_sprite.move(distance, 0.f);
-        }
+        const float distance = 1.f * deltatime * this->m_speed;
+        this->move({ distance, 0 });
     }
 
-	
 	// todo: replace by a jump
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
     {
-        m_sprite.move(0.0f, -1.0f * deltaTime * this->m_speed);
+        const float distance = -2.0f * deltatime * this->m_speed;
+        this->move({ 0, distance });
     }
+
+	// todo: replace by a dash
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+    {
+        const float distance = 4.0f * deltatime * this->m_speed;
+        this->move({0, distance});
+    }
+
 }
 
 void Player::update(int deltaTime)
 {
     // "Gravity"
-    // int falling = this->TryMoveDown(this->m_speed * deltaTime);
-	const float falling = this->TryMoveDown(0.2f * deltaTime);
-    this->m_sprite.move(0.0f, falling);
+	// NEW collision detection system
+    this->move({ 0.f, 0.2f * deltaTime });
 }
 
 
@@ -73,56 +63,63 @@ void Player::draw(sf::RenderWindow& window)
     window.draw(this->m_sprite);
 }
 
+void Player::move(sf::Vector2f path)
+{
+	// CALCULATE MOVEMENT
+	// Get collision data
+    std::vector<sf::Vector2i> firstCornerBlockOnPath = {};
+    std::vector<sf::Vector2i> secondCornerBlockOnPath = {};
+    std::vector<sf::Vector2i> thirdCornerBlockOnPath = {};
+    std::vector<sf::Vector2i> fourthCornerBlockOnPath = {};
+    const int numberOfStep = ceil(float(sqrt(path.x * path.x + path.y * path.y)) / this->m_game->m_world->getBlockSize()) * 2;
+    Collider::getMapBlockOnPath(&numberOfStep, this->m_game->m_world, this->m_sprite.getPosition(), this->GetCharacterSize().x, this->GetCharacterSize().y, path,
+        &firstCornerBlockOnPath,
+        &secondCornerBlockOnPath,
+        &thirdCornerBlockOnPath,
+        &fourthCornerBlockOnPath);
 
-// once moved to class, some args will no longer be mandatory
-float Player::TryMoveDown(float distance) {
-    sf::Vector2f playerSize = this->GetCharacterSize();
-    int blockSize = this->m_game->m_world->m_baseBlockSize * this->m_game->m_blocScale;
-	
-    float screenPosX = m_sprite.getPosition().x;
-    float screenPosY = m_sprite.getPosition().y;
-
-    // getting the two down corners
-    const sf::Vector2f firstCornerPosition = this->m_game->m_world->PositionOnScreenToMapPosition({screenPosX, screenPosY + playerSize.y}); // bottom left
-    const sf::Vector2f secondCornerPosition = this->m_game->m_world->PositionOnScreenToMapPosition({ screenPosX + playerSize.x, screenPosY + playerSize.y }); // bottom right
-
-    // convert positions to squares on map
-    const sf::Vector2i firstCornerSquare = this->m_game->m_world->PositionOnMapToMapBlockIndex(firstCornerPosition);
-    const sf::Vector2i secondCornerSquare = this->m_game->m_world->PositionOnMapToMapBlockIndex(secondCornerPosition);
-    const bool isAboveOnlyOneBlock = firstCornerSquare.x == secondCornerSquare.x;
-	
-    //printf("fst point [%d;%d]\n", firstCornerSquare.x, firstCornerSquare.y);
-    //printf("scd point [%d;%d]\n\n", secondCornerSquare.x, secondCornerSquare.y);
-
-    //Try moving // direction Down : y++
-    bool blocked = false;
-    int blockingBlocIndex = 0;
-
-    int** worldBlocks = this->m_game->m_world->GetBlocks();
-	sf::Vector2i worldSize = this->m_game->m_world->GetSize();
-    for (int blocIndexInPath = 0; blocIndexInPath < ceil(distance / blockSize); blocIndexInPath++) {
-        int blocIndexToTest = firstCornerSquare.y + blocIndexInPath;
-        if (!(blocIndexToTest >= worldSize.y || blocIndexToTest < 0 || firstCornerSquare.x >= worldSize.x || firstCornerSquare.x < 0)) {
-	        if (worldBlocks[blocIndexToTest][firstCornerSquare.x] != -1) {
-	            blocked = true;
-	            blockingBlocIndex = blocIndexToTest;
-	        }
-        }
-
-        //if above two distinct blocs
-        if (!isAboveOnlyOneBlock) {
-            if (!(blocIndexToTest >= worldSize.y || blocIndexToTest < 0 || secondCornerSquare.x >= worldSize.x || secondCornerSquare.x < 0)) {
-                if (worldBlocks[blocIndexToTest][secondCornerSquare.x] != -1) {
-                    blocked = true;
-                    blockingBlocIndex = blocIndexToTest;
-                }
-            }
-        }
+	// Calculate travelable distance
+    sf::Vector2f travelableDistance = { 0, 0 };
+    const sf::Vector2f stepDistance = { path.x / numberOfStep, path.y / numberOfStep };
+    for (int step = 0; step < numberOfStep; ++step)
+    {
+        if (
+            // Check if target block is in map
+            firstCornerBlockOnPath[step].x >= 0 && secondCornerBlockOnPath[step].x >= 0 && thirdCornerBlockOnPath[step].x >= 0 && fourthCornerBlockOnPath[step].x >= 0
+            && firstCornerBlockOnPath[step].x < this->m_game->m_world->GetSize().x && secondCornerBlockOnPath[step].x < this->m_game->m_world->GetSize().x && thirdCornerBlockOnPath[step].x < this->m_game->m_world->GetSize().x && fourthCornerBlockOnPath[step].x < this->m_game->m_world->GetSize().x
+            && firstCornerBlockOnPath[step].y >= 0 && secondCornerBlockOnPath[step].y >= 0 && thirdCornerBlockOnPath[step].y >= 0 && fourthCornerBlockOnPath[step].y >= 0
+            && firstCornerBlockOnPath[step].y < this->m_game->m_world->GetSize().y && secondCornerBlockOnPath[step].y < this->m_game->m_world->GetSize().y && thirdCornerBlockOnPath[step].y < this->m_game->m_world->GetSize().y && fourthCornerBlockOnPath[step].y < this->m_game->m_world->GetSize().y
+            // Check if target block is valid destination
+            && this->m_game->m_world->GetBlocks()[firstCornerBlockOnPath[step].x][firstCornerBlockOnPath[step].y] == -1
+            && this->m_game->m_world->GetBlocks()[secondCornerBlockOnPath[step].x][secondCornerBlockOnPath[step].y] == -1
+            && this->m_game->m_world->GetBlocks()[thirdCornerBlockOnPath[step].x][thirdCornerBlockOnPath[step].y] == -1
+            && this->m_game->m_world->GetBlocks()[fourthCornerBlockOnPath[step].x][fourthCornerBlockOnPath[step].y] == -1
+        ) travelableDistance += stepDistance;
+        else break;
     }
-    float travelDistanceReal = blocked
-        ? (blockingBlocIndex * (int)blockSize) - firstCornerPosition.y //- squareOnMapSize
-        : distance;
 
-    return travelDistanceReal;
+	// MOVE
+
+	//check for world translation (right) and move
+    const sf::Vector2f playerPosition = this->m_sprite.getPosition();
+    if (playerPosition.x + travelableDistance.x > (this->m_game->GetScreenSize().x * 3 / 4))
+    {
+        const float playerToWorldOffset = (this->m_game->GetScreenSize().x * 3 / 4) - (playerPosition.x + travelableDistance.x);
+        this->m_game->m_world->Translate(playerToWorldOffset);
+        this->m_sprite.move({ travelableDistance.x + playerToWorldOffset, travelableDistance.y });
+        return;
+    }
+
+	//check for world translation (right) and move
+    if (playerPosition.x + travelableDistance.x < (this->m_game->GetScreenSize().x * 1 / 4))
+    {
+        const float playerToWorldOffset = (this->m_game->GetScreenSize().x * 1 / 4) - (playerPosition.x + travelableDistance.x);
+        this->m_game->m_world->Translate(playerToWorldOffset);
+        this->m_sprite.move({ travelableDistance.x + playerToWorldOffset, travelableDistance.y });
+        return;
+    }
+
+	// Standard move if no world translation
+    this->m_sprite.move(travelableDistance);
 }
 

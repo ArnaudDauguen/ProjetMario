@@ -27,8 +27,8 @@ private:
 	sf::Texture m_texture;
 	
 	float m_speed = 0.5f;
-
-	float TryMoveDown(float distance);
+	
+	void move(sf::Vector2f path);
 
 
 	

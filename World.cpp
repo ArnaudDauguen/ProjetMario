@@ -11,32 +11,33 @@
 #include "Game.h"
 
 
-World::World(Game* game, int width, int height) : m_game(game)
+World::World(Game* game, int width, int height, float blockScale) : m_game(game)
 {
+    this->m_blockScale = blockScale;
     this->m_size = sf::Vector2i(width, height);
     this->loadTextures();
 	
-    this->m_blocks = new int* [height];
-    for (int i = 0; i < height; ++i)
-        this->m_blocks[i] = new int[width];
+    this->m_blocks = new int* [width];
+    for (int i = 0; i < width; ++i)
+        this->m_blocks[i] = new int[height];
 
 
     for (int j = 0; j < height; ++j)
     {
 	    for (int i = 0; i < width; ++i)
 	    {
-            this->m_blocks[j][i] = -1;
+            this->m_blocks[i][j] = -1;
 
 	    	if (j >= 19 && j < 21)
                 if(i < 19 || i > 21)
-					this->m_blocks[j][i] = 2;
+					this->m_blocks[i][j] = 2;
 
             if (j == 15)
                 if (i >= 19 && i <= 21)
-                    this->m_blocks[j][i] = 3;
+                    this->m_blocks[i][j] = 3;
 	    	
             if (j >= 21 && j < height)
-                this->m_blocks[j][i] = rand() % 2 == 0 ? 0 : 50;
+                this->m_blocks[i][j] = rand() % 2 == 0 ? 0 : 50;
 	    }
     }
 
@@ -57,14 +58,14 @@ void World::Translate(float distance)
 
 void World::draw(sf::RenderWindow& window)
 {
-    for (int j = 0; j < this->GetSize().y; j++) {
-        for (int i = 0; i < this->GetSize().x; i++) {
-            if (this->m_blocks[j][i] == -1) continue;
-            
+    for (int y = 0; y < this->GetSize().y; y++) {
+        for (int x = 0; x < this->GetSize().x; x++) {
+            if (this->m_blocks[x][y] == -1) continue;
+
             //blockSprite.setTexture(this->m_blocks[j][i] == 1 ? m_dirt_texture : m_stone_texture);
-            m_drawingBlockSprite.setTexture(this->m_blockTextures[this->m_blocks[j][i]]);
-        	
-            m_drawingBlockSprite.setPosition(i * (16 * this->m_game->m_blocScale) + this->GetPosition().x, j * (16 * this->m_game->m_blocScale) + this->GetPosition().y);
+            m_drawingBlockSprite.setTexture(this->m_blockTextures[this->m_blocks[x][y]]);
+
+            m_drawingBlockSprite.setPosition(x * (16 * this->m_game->m_blocScale) + this->GetPosition().x, y * (16 * this->m_game->m_blocScale) + this->GetPosition().y);
 
             window.draw(m_drawingBlockSprite);
         }

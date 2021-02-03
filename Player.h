@@ -2,21 +2,25 @@
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Texture.hpp>
 
+#include "IDrawableObject.h"
+#include "IUpdatableObject.h"
+
 namespace sf {
 	class RenderWindow;
 }
 
 class Game;
 
-class Player
+class Player : public IDrawableObject, public IUpdatableObject
 {
 public:
 	Player(Game* game, int x, int y, float scale);
 
 	void handleInputs(int deltaTime);
 	
-	void update(int deltaTime);
-	void draw(sf::RenderWindow& window) const;
+	void update(int deltaTime) override;
+	void draw(sf::RenderWindow& window) override;
+	bool mustDie() override { return false; }
 private:
 	Game* m_game;
 	sf::Sprite m_sprite;
@@ -24,7 +28,7 @@ private:
 	
 	float m_speed = 0.5f;
 
-	int TryMoveDown(float distance);
+	float TryMoveDown(float distance);
 
 
 	

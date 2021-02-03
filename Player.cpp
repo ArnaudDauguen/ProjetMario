@@ -22,9 +22,9 @@ void Player::handleInputs(int deltaTime)
 {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
     {
-        int distance = 1.f * deltaTime * this->m_speed;
+        const float distance = 1.f * deltaTime * this->m_speed;
 
-        sf::Vector2f playerPosition = this->m_sprite.getPosition();
+        const sf::Vector2f playerPosition = this->m_sprite.getPosition();
     	
     	if (playerPosition.x - distance < (this->m_game->GetScreenSize().x * 1 / 4))
     	{
@@ -37,9 +37,9 @@ void Player::handleInputs(int deltaTime)
 	
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
     {
-        int distance = 1.f * deltaTime * this->m_speed;
+        const float distance = 1.f * deltaTime * this->m_speed;
 
-        sf::Vector2f playerPosition = this->m_sprite.getPosition();
+        const sf::Vector2f playerPosition = this->m_sprite.getPosition();
     	
         if (playerPosition.x + distance > (this->m_game->GetScreenSize().x * 3 / 4))
         {
@@ -68,14 +68,14 @@ void Player::update(int deltaTime)
 }
 
 
-void Player::draw(sf::RenderWindow& window) const
+void Player::draw(sf::RenderWindow& window)
 {
     window.draw(this->m_sprite);
 }
 
 
 // once moved to class, some args will no longer be mandatory
-int Player::TryMoveDown(float distance) {
+float Player::TryMoveDown(float distance) {
     sf::Vector2f playerSize = this->GetCharacterSize();
     int blockSize = this->m_game->world->BlockSize * this->m_game->Scale;
 	

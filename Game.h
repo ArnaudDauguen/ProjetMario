@@ -4,6 +4,8 @@
 
 class World;
 class Player;
+class IUpdatableObject;
+class IDrawableObject;
 
 class Game
 {
@@ -23,5 +25,7 @@ public:
 	const int Scale = 2;
 private:
 	sf::RenderWindow& m_window;
+	std::vector<IUpdatableObject*> m_updatableObjects = std::vector<IUpdatableObject*>();
+	std::vector<IDrawableObject*> m_drawableObjects = std::vector<IDrawableObject*>();
 };
 

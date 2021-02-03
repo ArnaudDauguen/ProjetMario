@@ -3,14 +3,16 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/System/Vector2.hpp>
 
+#include "IDrawableObject.h"
+
 class Game;
 
-class World
+class World : public IDrawableObject
 {
 public:
 	World(Game* game, int width, int height);
 	
-	void draw(sf::RenderWindow& window);
+	void draw(sf::RenderWindow& window) override;
 
 	void Translate(float distance);
 
@@ -21,6 +23,8 @@ public:
 	sf::Vector2f GetPosition() const { return m_position; }
 	sf::Vector2i GetSize() const { return m_size; }
 	int** GetBlocks() const { return m_blocks; }
+
+	bool mustDie() override { return false; }
 
 	const int BlockSize = 16;
 private:

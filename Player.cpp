@@ -29,7 +29,7 @@ void Player::handleInputs(int deltaTime)
     	if (playerPosition.x - distance < (this->m_game->GetScreenSize().x * 1 / 4))
     	{
             m_sprite.setPosition(this->m_game->GetScreenSize().x * 1 / 4, playerPosition.y);
-            this->m_game->world->Translate(distance);
+            this->m_game->m_world->Translate(distance);
     	} else {
             m_sprite.move(-distance, 0.f);
     	}
@@ -44,7 +44,7 @@ void Player::handleInputs(int deltaTime)
         if (playerPosition.x + distance > (this->m_game->GetScreenSize().x * 3 / 4))
         {
             m_sprite.setPosition(this->m_game->GetScreenSize().x * 3 / 4, playerPosition.y);
-            this->m_game->world->Translate(-distance);
+            this->m_game->m_world->Translate(-distance);
         }
         else {
             m_sprite.move(distance, 0.f);
@@ -63,7 +63,7 @@ void Player::update(int deltaTime)
 {
     // "Gravity"
     // int falling = this->TryMoveDown(this->m_speed * deltaTime);
-	int falling = this->TryMoveDown(0.2f * deltaTime);
+	const float falling = this->TryMoveDown(0.2f * deltaTime);
     this->m_sprite.move(0.0f, falling);
 }
 
@@ -77,18 +77,18 @@ void Player::draw(sf::RenderWindow& window)
 // once moved to class, some args will no longer be mandatory
 float Player::TryMoveDown(float distance) {
     sf::Vector2f playerSize = this->GetCharacterSize();
-    int blockSize = this->m_game->world->BlockSize * this->m_game->Scale;
+    int blockSize = this->m_game->m_world->m_baseBlockSize * this->m_game->m_blocScale;
 	
     float screenPosX = m_sprite.getPosition().x;
     float screenPosY = m_sprite.getPosition().y;
 
     // getting the two down corners
-    const sf::Vector2f firstCornerPosition = this->m_game->world->PositionOnScreenToMapPosition({screenPosX, screenPosY + playerSize.y}); // bottom left
-    const sf::Vector2f secondCornerPosition = this->m_game->world->PositionOnScreenToMapPosition({ screenPosX + playerSize.x, screenPosY + playerSize.y }); // bottom right
+    const sf::Vector2f firstCornerPosition = this->m_game->m_world->PositionOnScreenToMapPosition({screenPosX, screenPosY + playerSize.y}); // bottom left
+    const sf::Vector2f secondCornerPosition = this->m_game->m_world->PositionOnScreenToMapPosition({ screenPosX + playerSize.x, screenPosY + playerSize.y }); // bottom right
 
     // convert positions to squares on map
-    const sf::Vector2i firstCornerSquare = this->m_game->world->PositionOnMapToMapBlockIndex(firstCornerPosition);
-    const sf::Vector2i secondCornerSquare = this->m_game->world->PositionOnMapToMapBlockIndex(secondCornerPosition);
+    const sf::Vector2i firstCornerSquare = this->m_game->m_world->PositionOnMapToMapBlockIndex(firstCornerPosition);
+    const sf::Vector2i secondCornerSquare = this->m_game->m_world->PositionOnMapToMapBlockIndex(secondCornerPosition);
     const bool isAboveOnlyOneBlock = firstCornerSquare.x == secondCornerSquare.x;
 	
     //printf("fst point [%d;%d]\n", firstCornerSquare.x, firstCornerSquare.y);
@@ -98,8 +98,8 @@ float Player::TryMoveDown(float distance) {
     bool blocked = false;
     int blockingBlocIndex = 0;
 
-    int** worldBlocks = this->m_game->world->GetBlocks();
-	sf::Vector2i worldSize = this->m_game->world->GetSize();
+    int** worldBlocks = this->m_game->m_world->GetBlocks();
+	sf::Vector2i worldSize = this->m_game->m_world->GetSize();
     for (int blocIndexInPath = 0; blocIndexInPath < ceil(distance / blockSize); blocIndexInPath++) {
         int blocIndexToTest = firstCornerSquare.y + blocIndexInPath;
         if (!(blocIndexToTest >= worldSize.y || blocIndexToTest < 0 || firstCornerSquare.x >= worldSize.x || firstCornerSquare.x < 0)) {

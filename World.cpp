@@ -40,11 +40,13 @@ World::World(Game* game, int width, int height) : m_game(game)
 	    }
     }
 
+	m_drawingBlockSprite.scale(sf::Vector2f(this->m_game->m_blocScale, this->m_game->m_blocScale));
+
     /*if (!this->m_dirt_texture.loadFromFile("Textures/terrain.png", sf::IntRect(0 + 16 * 2, 0 + 16 * 0, 16, 16)))
-        std::cout << "Issue with loading the world texture 1" << std::endl;
+        std::cout << "Issue with loading the m_world texture 1" << std::endl;
     
     if (!this->m_stone_texture.loadFromFile("Textures/terrain.png", sf::IntRect(0 + 16 * 0, 0 + 16 * 0, 16, 16)))
-        std::cout << "Issue with loading the world texture 2" << std::endl;*/
+        std::cout << "Issue with loading the m_world texture 2" << std::endl;*/
 }
 
 void World::Translate(float distance)
@@ -55,30 +57,28 @@ void World::Translate(float distance)
 
 void World::draw(sf::RenderWindow& window)
 {
-    sf::Sprite blockSprite;
-    blockSprite.scale(sf::Vector2f(this->m_game->Scale, this->m_game->Scale));
     for (int j = 0; j < this->GetSize().y; j++) {
         for (int i = 0; i < this->GetSize().x; i++) {
             if (this->m_blocks[j][i] == -1) continue;
             
             //blockSprite.setTexture(this->m_blocks[j][i] == 1 ? m_dirt_texture : m_stone_texture);
-            blockSprite.setTexture(this->m_blockTextures[this->m_blocks[j][i]]);
+            m_drawingBlockSprite.setTexture(this->m_blockTextures[this->m_blocks[j][i]]);
         	
-            blockSprite.setPosition(i * (16 * this->m_game->Scale) + this->GetPosition().x, j * (16 * this->m_game->Scale) + this->GetPosition().y);
+            m_drawingBlockSprite.setPosition(i * (16 * this->m_game->m_blocScale) + this->GetPosition().x, j * (16 * this->m_game->m_blocScale) + this->GetPosition().y);
 
-            window.draw(blockSprite);
+            window.draw(m_drawingBlockSprite);
         }
     }
 }
 
 void World::loadTextures()
 {
-	for (int y = 0; y < float((this->blockTextureCount -1)/16); ++y)
+	for (int y = 0; y < float((this->m_blockTextureCount -1)/16); ++y)
 	{
 		for (int x = 0; x < 16; ++x)
 		{
             if (!this->m_blockTextures[y * 16 + x].loadFromFile("Textures/terrain.png", sf::IntRect(0 + 16 * x, 0 + 16 * y, 16, 16)))
-                std::cout << "Issue with loading the world texture " << y*16 + x << std::endl;
+                std::cout << "Issue with loading the m_world texture " << y*16 + x << std::endl;
 		}
 	}
 }
@@ -91,12 +91,12 @@ sf::Vector2f World::PositionOnScreenToMapPosition(sf::Vector2f positionOnScreen)
 
 sf::Vector2i World::PositionOnMapToMapBlockIndex(sf::Vector2f positionOnMap) const
 {
-    const float blockSize = this->BlockSize * this->m_game->Scale;
+    const float blockSize = this->m_baseBlockSize * this->m_game->m_blocScale;
     return { (int)floor(positionOnMap.x / blockSize), (int)floor(positionOnMap.y / blockSize) };
 }
 
 sf::Vector2i World::PositionOnScreenToMapBlockIndex(sf::Vector2f positionOnMap) const
 {
-    const float blockSize = this->BlockSize * this->m_game->Scale;
+    const float blockSize = this->m_baseBlockSize * this->m_game->m_blocScale;
     return { (int)floor((positionOnMap.x - this->GetPosition().x) / blockSize), (int)floor((positionOnMap.y - this->GetPosition().y) / blockSize) };
 }

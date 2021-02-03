@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/System/Vector2.hpp>
 
@@ -26,7 +27,7 @@ public:
 
 	bool mustDie() override { return false; }
 
-	const int BlockSize = 16;
+	const int m_baseBlockSize = 16;
 private:
 	Game* m_game;
 	
@@ -36,8 +37,8 @@ private:
 
 	int** m_blocks;
 
-	sf::Texture m_player_texture;
-	const int blockTextureCount = 256;
+	sf::Sprite m_drawingBlockSprite;
+	const int m_blockTextureCount = 256;
 	sf::Texture m_blockTextures[256];
 
 	void loadTextures();

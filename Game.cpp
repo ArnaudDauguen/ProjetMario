@@ -5,18 +5,18 @@
 
 Game::Game(sf::RenderWindow& window) : m_window(window)
 {
-	this->world = new World(this, 43, 23);
-	this->player = new Player(this, 640, 120, 1.75f);
+	this->m_world = new World(this, 43, 23);
+	this->m_player = new Player(this, 640, 120, 1.75f);
 
-	this->m_updatableObjects.push_back(this->player);
-	this->m_drawableObjects.push_back(this->world);
-	this->m_drawableObjects.push_back(this->player);
+	this->m_updatableObjects.push_back(this->m_player);
+	this->m_drawableObjects.push_back(this->m_world);
+	this->m_drawableObjects.push_back(this->m_player);
 	
 }
 
 void Game::handleInputs(int deltaTime)
 {
-	this->player->handleInputs(deltaTime);
+	this->m_player->handleInputs(deltaTime);
 }
 
 void Game::update(int deltaTime)

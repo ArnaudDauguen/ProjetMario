@@ -11,7 +11,7 @@
 Player::Player(Game* game, int x, int y, float scale)
 {
     this->m_game = game;
-    if (!this->m_texture.loadFromFile("Textures/terrain.png", sf::IntRect(0 + 16 * 0, 0 + 16 * 0, 16, 16)))
+    if (!this->m_texture.loadFromFile("Textures/terrain.png", sf::IntRect(0 + 16 * 11, 0 + 16 * 8, 16, 16)))
 	    std::cout << "Issue with loading the player texture" << std::endl;
 
 	this->m_sprite = sf::Sprite(this->m_texture);

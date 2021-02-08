@@ -15,20 +15,20 @@ public:
 	
 	void draw(sf::RenderWindow& window) override;
 
-	void Translate(float distance);
+	void Translate(sf::Vector2f distance);
 
 	sf::Vector2f PositionOnScreenToMapPosition(sf::Vector2f positionOnScreen) const ;
 	sf::Vector2i PositionOnMapToMapBlockIndex(sf::Vector2f positionOnMap) const ;
 	sf::Vector2i PositionOnScreenToMapBlockIndex(sf::Vector2f positionOnMap) const ;
+
+	sf::Vector2f CheckForWorldMove(sf::Vector2f playerPosition, sf::Vector2f travelableDistance);
 	
 	sf::Vector2f GetPosition() const { return m_position; }
 	sf::Vector2i GetSize() const { return m_size; }
 	int** GetBlocks() const { return m_blocks; }
 	int GetBlock(int x, int y) const { return m_blocks[x][y]; }
-
-	bool mustDie() override { return false; }
-
 	float getBlockSize() const { return this->m_baseBlockSize * this->m_blockScale; }
+	bool mustDie() override { return false; }
 
 private:
 	Game* m_game;
@@ -44,6 +44,13 @@ private:
 	sf::Sprite m_drawingBlockSprite;
 	const int m_blockTextureCount = 256;
 	sf::Texture m_blockTextures[256];
+
+	const float m_leftBoundOnMap = 0.25f;
+	const float m_rightBoundOnMap = 0.75f;
+	const float m_topBoundOnMap = 0.3f;
+	const float m_bottomBoundOnMap = 0.7f;
+	float m_leftBoundDistanceInPixels;
+	float m_bottomBoundDistanceInPixels;
 
 	void loadTextures();
 };

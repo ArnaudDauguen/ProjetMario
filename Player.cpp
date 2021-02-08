@@ -99,26 +99,15 @@ void Player::move(sf::Vector2f path)
     }
 
 	// MOVE
-
 	//check for world translation (right) and move
     const sf::Vector2f playerPosition = this->m_sprite.getPosition();
-    if (playerPosition.x + travelableDistance.x > (this->m_game->GetScreenSize().x * 3 / 4))
-    {
-        const float playerToWorldOffset = (this->m_game->GetScreenSize().x * 3 / 4) - (playerPosition.x + travelableDistance.x);
+    const sf::Vector2f playerToWorldOffset = this->m_game->m_world->CheckForWorldMove(this->m_sprite.getPosition(), travelableDistance);
+	if(playerToWorldOffset != sf::Vector2f{0, 0})
+	{
+        this->m_sprite.move({ travelableDistance.x + playerToWorldOffset.x, travelableDistance.y + playerToWorldOffset.y });
         this->m_game->m_world->Translate(playerToWorldOffset);
-        this->m_sprite.move({ travelableDistance.x + playerToWorldOffset, travelableDistance.y });
         return;
-    }
-
-	//check for world translation (right) and move
-    if (playerPosition.x + travelableDistance.x < (this->m_game->GetScreenSize().x * 1 / 4))
-    {
-        const float playerToWorldOffset = (this->m_game->GetScreenSize().x * 1 / 4) - (playerPosition.x + travelableDistance.x);
-        this->m_game->m_world->Translate(playerToWorldOffset);
-        this->m_sprite.move({ travelableDistance.x + playerToWorldOffset, travelableDistance.y });
-        return;
-    }
-
+	}
 	// Standard move if no world translation
     this->m_sprite.move(travelableDistance);
 }

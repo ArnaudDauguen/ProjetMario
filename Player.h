@@ -20,6 +20,12 @@ public:
 	
 	void update(int deltaTime) override;
 	void draw(sf::RenderWindow& window) override;
+	sf::Vector2f GetCharacterSize() const {
+		return {
+		m_sprite.getTexture()->getSize().x * m_sprite.getScale().x,
+		m_sprite.getTexture()->getSize().y * m_sprite.getScale().y
+		};
+	}
 	bool mustDie() override { return false; }
 private:
 	Game* m_game;
@@ -32,11 +38,5 @@ private:
 
 
 	
-	sf::Vector2f GetCharacterSize() const {
-		return {
-		m_sprite.getTexture()->getSize().x * m_sprite.getScale().x,
-		m_sprite.getTexture()->getSize().y * m_sprite.getScale().y
-		};
-	}
 };
 

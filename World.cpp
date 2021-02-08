@@ -9,6 +9,7 @@
 #include <SFML/Graphics/Sprite.hpp>
 
 #include "Game.h"
+#include "Player.h"
 
 
 World::World(Game* game, int width, int height, float blockScale) : m_game(game)
@@ -38,21 +39,21 @@ World::World(Game* game, int width, int height, float blockScale) : m_game(game)
 	    	
             if (j >= 21 && j < height)
                 this->m_blocks[i][j] = rand() % 2 == 0 ? 0 : 50;
+            if (i == width - 1)
+                this->m_blocks[i][j] = -1;
 	    }
     }
 
 	m_drawingBlockSprite.scale(sf::Vector2f(this->m_game->m_blocScale, this->m_game->m_blocScale));
 
-    /*if (!this->m_dirt_texture.loadFromFile("Textures/terrain.png", sf::IntRect(0 + 16 * 2, 0 + 16 * 0, 16, 16)))
-        std::cout << "Issue with loading the m_world texture 1" << std::endl;
-    
-    if (!this->m_stone_texture.loadFromFile("Textures/terrain.png", sf::IntRect(0 + 16 * 0, 0 + 16 * 0, 16, 16)))
-        std::cout << "Issue with loading the m_world texture 2" << std::endl;*/
+    this->m_leftBoundDistanceInPixels = (this->GetSize().x - 1) * this->getBlockSize() - this->m_game->GetScreenSize().x - (-this->m_game->m_player->GetCharacterSize().x);
+    this->m_bottomBoundDistanceInPixels = (this->GetSize().y - 1) * this->getBlockSize() - this->m_game->GetScreenSize().y - (-this->m_game->m_player->GetCharacterSize().y);
 }
 
-void World::Translate(float distance)
+void World::Translate(sf::Vector2f distance)
 {
-    this->m_position.x += distance;
+    this->m_position.x += distance.x;
+    this->m_position.y += distance.y;
 }
 
 
@@ -87,7 +88,7 @@ void World::loadTextures()
 
 sf::Vector2f World::PositionOnScreenToMapPosition(sf::Vector2f positionOnScreen) const
 {
-    return { positionOnScreen.x - this->GetPosition().x, positionOnScreen.y - this->GetPosition().y };
+    return { positionOnScreen.x - this->m_position.x, positionOnScreen.y - this->m_position.y };
 }
 
 sf::Vector2i World::PositionOnMapToMapBlockIndex(sf::Vector2f positionOnMap) const
@@ -99,5 +100,61 @@ sf::Vector2i World::PositionOnMapToMapBlockIndex(sf::Vector2f positionOnMap) con
 sf::Vector2i World::PositionOnScreenToMapBlockIndex(sf::Vector2f positionOnMap) const
 {
     const float blockSize = this->m_baseBlockSize * this->m_game->m_blocScale;
-    return { (int)floor((positionOnMap.x - this->GetPosition().x) / blockSize), (int)floor((positionOnMap.y - this->GetPosition().y) / blockSize) };
+    return { (int)floor((positionOnMap.x - this->m_position.x) / blockSize), (int)floor((positionOnMap.y - this->m_position.y) / blockSize) };
+}
+
+sf::Vector2f World::CheckForWorldMove(sf::Vector2f playerPosition, sf::Vector2f travelableDistance)
+{
+    sf::Vector2f worldMove = { 0, 0 };
+    
+    //check for right
+    if (playerPosition.x + travelableDistance.x > (this->m_game->GetScreenSize().x * this->m_rightBoundOnMap))
+    { // and check to hide right black pixels
+    	if(this->m_position.x > -m_leftBoundDistanceInPixels)
+    	{
+            worldMove.x = (this->m_game->GetScreenSize().x * this->m_rightBoundOnMap) - (playerPosition.x + travelableDistance.x);
+    	}else
+    	{
+            worldMove.x = -m_leftBoundDistanceInPixels - this->m_position.x;
+    	}
+    }
+
+    //check for left
+    else if (playerPosition.x + travelableDistance.x < (this->m_game->GetScreenSize().x * this->m_leftBoundOnMap))
+    { // and check to hide left black pixels
+    	if(this->m_position.x < 0)
+    	{
+			worldMove.x = (this->m_game->GetScreenSize().x * this->m_leftBoundOnMap) - (playerPosition.x + travelableDistance.x);
+    	}else
+    	{
+            worldMove.x = 0 - this->m_position.x;
+    	}
+    }
+
+    //check for bottom
+    if (playerPosition.y + travelableDistance.y > (this->m_game->GetScreenSize().y * this->m_bottomBoundOnMap))
+    { // and check to hide bottom black pixels
+        if (this->m_position.y > -m_bottomBoundDistanceInPixels)
+        {
+            worldMove.y = (this->m_game->GetScreenSize().y * this->m_bottomBoundOnMap) - (playerPosition.y + travelableDistance.y);
+        }else
+        {
+            worldMove.y = -m_bottomBoundDistanceInPixels - this->m_position.y;
+        }
+    }
+
+    //check for top
+    else if (playerPosition.y + travelableDistance.y < (this->m_game->GetScreenSize().y * this->m_topBoundOnMap))
+    { // and check to hide top black pixels
+    	if(this->m_position.y < 0)
+    	{
+            worldMove.y = (this->m_game->GetScreenSize().y * this->m_topBoundOnMap) - (playerPosition.y + travelableDistance.y);
+    	}else
+    	{
+            worldMove.y = 0 - this->m_position.y;
+    	}
+    }
+
+
+    return worldMove;
 }

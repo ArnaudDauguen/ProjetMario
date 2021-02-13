@@ -56,7 +56,9 @@ void Player::move(sf::Vector2f path)
 {
 	// CALCULATE MOVEMENT
     sf::Vector2f travelableDistance = this->calculateMovementVector(path);
-
+    if (travelableDistance == sf::Vector2f{ 0, 0 })
+        return;
+	
 	// MOVE
 	//check for world translation (right) and move
     const sf::Vector2f playerToWorldOffset = this->m_game->m_world->CheckForWorldMove(this->m_sprite.getPosition(), travelableDistance);

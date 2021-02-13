@@ -45,9 +45,9 @@ World::World(Game* game, int width, int height, float blockScale) : m_game(game)
     }
 
 	m_drawingBlockSprite.scale(sf::Vector2f(this->m_game->m_blocScale, this->m_game->m_blocScale));
-
-    this->m_leftBoundDistanceInPixels = (this->GetSize().x - 1) * this->getBlockSize() - this->m_game->GetScreenSize().x - (-this->m_game->m_player->GetCharacterSize().x);
-    this->m_bottomBoundDistanceInPixels = (this->GetSize().y - 1) * this->getBlockSize() - this->m_game->GetScreenSize().y - (-this->m_game->m_player->GetCharacterSize().y);
+    
+    this->m_rightBoundDistanceInPixels = this->GetSize().x * this->getBlockSize() - this->m_game->GetScreenSize().x;
+    this->m_bottomBoundDistanceInPixels = this->GetSize().y * this->getBlockSize() - this->m_game->GetScreenSize().y;
 }
 
 void World::Translate(sf::Vector2f distance)
@@ -106,25 +106,29 @@ sf::Vector2i World::PositionOnScreenToMapBlockIndex(sf::Vector2f positionOnMap) 
 sf::Vector2f World::CheckForWorldMove(sf::Vector2f playerPosition, sf::Vector2f travelableDistance)
 {
     sf::Vector2f worldMove = { 0, 0 };
-    
+    float xPlayerLocation = playerPosition.x + travelableDistance.x;
+    float yPlayerLocation = playerPosition.y + travelableDistance.y;
     //check for right
-    if (playerPosition.x + travelableDistance.x > (this->m_game->GetScreenSize().x * this->m_rightBoundOnMap))
+    if (xPlayerLocation + this->m_game->m_player->GetCharacterSize().x > (this->m_game->GetScreenSize().x * this->m_rightBoundOnMap))
     { // and check to hide right black pixels
-    	if(this->m_position.x > -m_leftBoundDistanceInPixels)
+	    std::cout << this->m_position.x << " " << -m_rightBoundDistanceInPixels << std::endl;
+    	if(this->m_position.x > -m_rightBoundDistanceInPixels)
     	{
-            worldMove.x = (this->m_game->GetScreenSize().x * this->m_rightBoundOnMap) - (playerPosition.x + travelableDistance.x);
+	        std::cout << 1 << std::endl;
+            worldMove.x = (this->m_game->GetScreenSize().x * this->m_rightBoundOnMap) - (xPlayerLocation + this->m_game->m_player->GetCharacterSize().x);
     	}else
     	{
-            worldMove.x = -m_leftBoundDistanceInPixels - this->m_position.x;
+	        std::cout << 2 << std::endl;
+            worldMove.x = -m_rightBoundDistanceInPixels - this->m_position.x;
     	}
     }
 
     //check for left
-    else if (playerPosition.x + travelableDistance.x < (this->m_game->GetScreenSize().x * this->m_leftBoundOnMap))
+    else if (xPlayerLocation < (this->m_game->GetScreenSize().x * this->m_leftBoundOnMap))
     { // and check to hide left black pixels
     	if(this->m_position.x < 0)
     	{
-			worldMove.x = (this->m_game->GetScreenSize().x * this->m_leftBoundOnMap) - (playerPosition.x + travelableDistance.x);
+			worldMove.x = (this->m_game->GetScreenSize().x * this->m_leftBoundOnMap) - xPlayerLocation;
     	}else
     	{
             worldMove.x = 0 - this->m_position.x;
@@ -132,11 +136,11 @@ sf::Vector2f World::CheckForWorldMove(sf::Vector2f playerPosition, sf::Vector2f 
     }
 
     //check for bottom
-    if (playerPosition.y + travelableDistance.y > (this->m_game->GetScreenSize().y * this->m_bottomBoundOnMap))
+    if (yPlayerLocation > (this->m_game->GetScreenSize().y * this->m_bottomBoundOnMap))
     { // and check to hide bottom black pixels
         if (this->m_position.y > -m_bottomBoundDistanceInPixels)
         {
-            worldMove.y = (this->m_game->GetScreenSize().y * this->m_bottomBoundOnMap) - (playerPosition.y + travelableDistance.y);
+            worldMove.y = (this->m_game->GetScreenSize().y * this->m_bottomBoundOnMap) - yPlayerLocation;
         }else
         {
             worldMove.y = -m_bottomBoundDistanceInPixels - this->m_position.y;
@@ -144,11 +148,11 @@ sf::Vector2f World::CheckForWorldMove(sf::Vector2f playerPosition, sf::Vector2f 
     }
 
     //check for top
-    else if (playerPosition.y + travelableDistance.y < (this->m_game->GetScreenSize().y * this->m_topBoundOnMap))
+    else if (yPlayerLocation < (this->m_game->GetScreenSize().y * this->m_topBoundOnMap))
     { // and check to hide top black pixels
     	if(this->m_position.y < 0)
     	{
-            worldMove.y = (this->m_game->GetScreenSize().y * this->m_topBoundOnMap) - (playerPosition.y + travelableDistance.y);
+            worldMove.y = (this->m_game->GetScreenSize().y * this->m_topBoundOnMap) - yPlayerLocation;
     	}else
     	{
             worldMove.y = 0 - this->m_position.y;

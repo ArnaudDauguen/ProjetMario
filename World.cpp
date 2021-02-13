@@ -8,6 +8,8 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 
+
+#include "Enemy.h"
 #include "Game.h"
 #include "Player.h"
 
@@ -37,7 +39,7 @@ World::World(Game* game, int width, int height, float blockScale) : m_game(game)
                 if (i >= 19 && i <= 21)
                     this->m_blocks[i][j] = 3;
 	    	
-            if (j >= 21 && j < height)
+            if (j >= 21 && j < height - 1)
                 this->m_blocks[i][j] = rand() % 2 == 0 ? 0 : 50;
             if (i == width - 1)
                 this->m_blocks[i][j] = -1;
@@ -54,6 +56,11 @@ void World::Translate(sf::Vector2f distance)
 {
     this->m_position.x += distance.x;
     this->m_position.y += distance.y;
+
+    for (const auto& enemy : this->m_game->enemies)
+    {
+        enemy->forceMove(distance);
+    }
 }
 
 
@@ -111,14 +118,11 @@ sf::Vector2f World::CheckForWorldMove(sf::Vector2f playerPosition, sf::Vector2f 
     //check for right
     if (xPlayerLocation + this->m_game->m_player->GetCharacterSize().x > (this->m_game->GetScreenSize().x * this->m_rightBoundOnMap))
     { // and check to hide right black pixels
-	    std::cout << this->m_position.x << " " << -m_rightBoundDistanceInPixels << std::endl;
     	if(this->m_position.x > -m_rightBoundDistanceInPixels)
     	{
-	        std::cout << 1 << std::endl;
             worldMove.x = (this->m_game->GetScreenSize().x * this->m_rightBoundOnMap) - (xPlayerLocation + this->m_game->m_player->GetCharacterSize().x);
     	}else
     	{
-	        std::cout << 2 << std::endl;
             worldMove.x = -m_rightBoundDistanceInPixels - this->m_position.x;
     	}
     }

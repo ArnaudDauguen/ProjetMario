@@ -18,7 +18,7 @@ public:
 	void draw(int deltaTime);
 
 	World* m_world = nullptr;
-	Player* m_player = nullptr;
+	std::shared_ptr<Player> m_player = nullptr;
 	std::vector<std::shared_ptr<Enemy>> enemies = std::vector<std::shared_ptr<Enemy>>();
 	
 	sf::Vector2u GetScreenSize() const { return m_window.getSize(); }
@@ -27,7 +27,7 @@ public:
 	float gravityStrength = 0.6f;
 private:
 	sf::RenderWindow& m_window;
-	std::vector<IUpdatableObject*> m_updatableObjects = std::vector<IUpdatableObject*>();
-	std::vector<IDrawableObject*> m_drawableObjects = std::vector<IDrawableObject*>();
+	std::vector<std::shared_ptr<IUpdatableObject>> m_updatableObjects = std::vector<std::shared_ptr<IUpdatableObject>>();
+	std::vector<std::shared_ptr<IDrawableObject>> m_drawableObjects = std::vector<std::shared_ptr<IDrawableObject>>();
 };
 

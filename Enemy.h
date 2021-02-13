@@ -8,11 +8,7 @@ public:
 	Enemy() = default;
 	virtual ~Enemy() = default;
 
-
-	float GetLocationX()
-	{
-		return this->m_sprite.getPosition().x;
-	}
+	virtual void update(int deltaTime) override;
 protected:
 
 };

@@ -2,24 +2,26 @@
 
 #include <iostream>
 
-EGoomba::EGoomba(Game* game, int x, int y, float scale, float mass, int textureIndex)
+EGoomba::EGoomba(Game* game, int x, int y, float scale, float mass, int textureIndex, sf::Vector2f speed)
 {
 	this->m_game = game;
-	if (!this->m_texture.loadFromFile("Textures/terrain.png", sf::IntRect(0, 0, 16, 16)))
-		std::cout << "Issue with loading the player texture" << std::endl;
-
+	if (!this->m_texture.loadFromFile("Textures/terrain.png", sf::IntRect(16 * (textureIndex%16), 16 * (int)floor(textureIndex / 16), 16, 16)))
+		std::cout << "Issue with loading the Goombat texture" << std::endl;
+	//TODO to avoid blanck bounds, use a sf::Image and Image.CreateMaskFromColor(sf::Color(0, 255, 0, 255), 0)
 	this->m_sprite = sf::Sprite(this->m_texture);
 	this->m_sprite.setPosition(x, y);
 	this->m_sprite.scale(sf::Vector2f(scale, scale));
 	this->m_mass = mass;
+	this->m_speed = speed;
 }
 
-void EGoomba::update(int deltaTime)
+void EGoomba::move(sf::Vector2f path)
 {
-	if (this->mustDie())
-		return;
+	// CALCULATE MOVEMENT
+	sf::Vector2f travelableDistance = this->calculateMovementVector(path);
+	if (travelableDistance == sf::Vector2f(0.f, 0.f))
+		this->m_speed *= -1.f;
 
-	return;
-	
-	this->move({ 1.f * deltaTime, 0.f });
+	// MOVE
+	this->m_sprite.move(travelableDistance);
 }

@@ -8,7 +8,7 @@
 #include "World.h"
 #include "Collider.h"
 
-Player::Player(Game* game, int x, int y, float scale, float mass)
+Player::Player(Game* game, int x, int y, float scale, float mass, sf::Vector2f speed)
 {
     this->m_game = game;
     if (!this->m_texture.loadFromFile("Textures/terrain.png", sf::IntRect(0 + 16 * 11, 0 + 16 * 8, 16, 16)))
@@ -18,6 +18,7 @@ Player::Player(Game* game, int x, int y, float scale, float mass)
 	this->m_sprite.setPosition(x, y);
 	this->m_sprite.scale(sf::Vector2f (scale, scale));
     this->m_mass = mass;
+    this->m_speed = speed;
 }
 
 void Player::handleInputs(int deltaTime)
@@ -25,31 +26,40 @@ void Player::handleInputs(int deltaTime)
     float deltatime = float(deltaTime);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
     {
-        const float distance = -1.f * deltatime * this->m_speed;
+        const float distance = -1.f * deltatime * this->m_speed.x;
         this->move({ distance, 0 });
     }
 	
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
     {
-        const float distance = 1.f * deltatime * this->m_speed;
+        const float distance = 1.f * deltatime * this->m_speed.x;
         this->move({ distance, 0 });
     }
 
 	// todo: replace by a jump
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
     {
-        const float distance = -2.0f * deltatime * this->m_speed;
+        const float distance = -2.0f * deltatime * this->m_speed.x;
         this->move({ 0, distance });
     }
 
 	// todo: replace by a dash
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
     {
-        const float distance = 4.0f * deltatime * this->m_speed;
+        const float distance = 4.0f * deltatime * this->m_speed.x;
         this->move({0, distance});
     }
 
 }
+
+void Player::applyGravity(int deltaTime)
+{
+    if (this->m_mass == 0.f)
+        return;
+
+    this->move({ 0.f, this->m_mass * this->m_game->gravityStrength * deltaTime });
+}
+
 
 void Player::move(sf::Vector2f path)
 {

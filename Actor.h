@@ -18,22 +18,24 @@ public:
 		};
 	}
 	
-	void update(int deltaTime) override;
-	void draw(sf::RenderWindow& window) override;
+	void update(int deltaTime) override { this->applyGravity(deltaTime); };
+	void draw(sf::RenderWindow& window) override { window.draw(this->m_sprite); };
 	bool mustDie() override { return false; }
+
+	void forceMove(sf::Vector2f distance);
 
 protected:
 	Game* m_game;
 	sf::Sprite m_sprite;
 	sf::Texture m_texture;
 
-	float m_speed = 0.5f;
+	sf::Vector2f m_speed;
 	float m_mass;
 
 	sf::Vector2f calculateMovementVector(sf::Vector2f path);
 
 	virtual void move(sf::Vector2f path);
-	void applyGravity(int deltaTime);
+	virtual void applyGravity(int deltaTime);
 
 private:
 	

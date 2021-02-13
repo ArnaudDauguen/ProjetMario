@@ -1,7 +1,5 @@
 #include "Collider.h"
 
-#include <iostream>
-#include <utility>
 #include <vector>
 
 #include "World.h"

@@ -1,13 +1,11 @@
 #pragma once
 #include <SFML/Graphics/RenderWindow.hpp>
 
-#include "Enemy.h"
-
-
 class World;
 class Player;
 class IUpdatableObject;
 class IDrawableObject;
+class Enemy;
 
 class Game
 {
@@ -21,7 +19,7 @@ public:
 
 	World* m_world = nullptr;
 	Player* m_player = nullptr;
-	Enemy enemies [1];
+	std::vector<std::shared_ptr<Enemy>> enemies = std::vector<std::shared_ptr<Enemy>>();
 	
 	sf::Vector2u GetScreenSize() const { return m_window.getSize(); }
 	

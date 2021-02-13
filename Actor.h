@@ -3,10 +3,10 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/System/Vector2.hpp>
 
-#include "Game.h"
 #include "IDrawableObject.h"
 #include "IUpdatableObject.h"
 
+class Game;
 
 class Actor : public IDrawableObject, public IUpdatableObject
 {

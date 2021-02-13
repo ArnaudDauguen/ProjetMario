@@ -1,7 +1,11 @@
 #include "Actor.h"
 
+#include <iostream>
+
+
 #include "Collider.h"
 #include "World.h"
+#include "Game.h"
 
 void Actor::update(int deltaTime)
 {
@@ -15,9 +19,8 @@ void Actor::applyGravity(int deltaTime)
 }
 
 
-
 void Actor::draw(sf::RenderWindow& window)
-{
+{	
     window.draw(this->m_sprite);
 }
 

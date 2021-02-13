@@ -2,6 +2,8 @@
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Texture.hpp>
 
+
+#include "Actor.h"
 #include "IDrawableObject.h"
 #include "IUpdatableObject.h"
 
@@ -11,29 +13,17 @@ namespace sf {
 
 class Game;
 
-class Player : public IDrawableObject, public IUpdatableObject
+class Player : public Actor
 {
 public:
-	Player(Game* game, int x, int y, float scale);
+	Player(Game* game, int x, int y, float scale, float mass);
 
 	void handleInputs(int deltaTime);
 	
-	void update(int deltaTime) override;
-	void draw(sf::RenderWindow& window) override;
-	sf::Vector2f GetCharacterSize() const {
-		return {
-		m_sprite.getTexture()->getSize().x * m_sprite.getScale().x,
-		m_sprite.getTexture()->getSize().y * m_sprite.getScale().y
-		};
-	}
-	bool mustDie() override { return false; }
+protected:
+	void move(sf::Vector2f path) override;
+
 private:
-	Game* m_game;
-	sf::Sprite m_sprite;
-	sf::Texture m_texture;
 	
-	float m_speed = 0.5f;
-	
-	void move(sf::Vector2f path);
 };
 

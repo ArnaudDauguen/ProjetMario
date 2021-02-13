@@ -49,7 +49,7 @@ private:
 	const float m_rightBoundOnMap = 0.75f;
 	const float m_topBoundOnMap = 0.3f;
 	const float m_bottomBoundOnMap = 0.7f;
-	float m_leftBoundDistanceInPixels;
+	float m_rightBoundDistanceInPixels;
 	float m_bottomBoundDistanceInPixels;
 
 	void loadTextures();

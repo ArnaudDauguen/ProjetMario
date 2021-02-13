@@ -1,20 +1,30 @@
+#pragma once
+
 #include "Game.h"
 
 #include <iostream>
 
 
+#include "Actor.h"
 #include "World.h"
 #include "Player.h"
 #include "SaveReader.h"
+#include "Enemies/EGoomba.h"
 
 Game::Game(sf::RenderWindow& window) : m_window(window)
 {
 	this->m_player = new Player(this, 640, 120, 1.75f, 1); // world need player
 	this->m_world = new World(this, 50, 30, this->m_blocScale);
+	
 
 	this->m_updatableObjects.push_back(this->m_player);
 	this->m_drawableObjects.push_back(this->m_world);
 	this->m_drawableObjects.push_back(this->m_player);
+
+	this->enemies[0] = EGoomba(this, 800, 100, 1.75f, 1, 69);
+	
+	this->m_drawableObjects.push_back(dynamic_cast<IDrawableObject*> this->enemies[0]);
+	this->m_updatableObjects.push_back(this->enemies[0]);
 
 	auto d = SaveReader::GetBlocksData();
 
@@ -29,6 +39,7 @@ void Game::handleInputs(int deltaTime)
 
 void Game::update(int deltaTime)
 {
+	std::cout << this->m_updatableObjects.size() << std::endl;
 	m_updatableObjects.erase(std::remove_if(m_updatableObjects.begin(), m_updatableObjects.end(), [](IUpdatableObject* ele)->bool
 		{
 			return ele->mustDie();

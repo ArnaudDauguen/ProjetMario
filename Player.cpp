@@ -18,7 +18,6 @@ Player::Player(Game* game, int x, int y, float scale, float mass)
 	this->m_sprite.setPosition(x, y);
 	this->m_sprite.scale(sf::Vector2f (scale, scale));
     this->m_mass = mass;
-    this->m_gravityFactor = 0.2f * this->m_mass;
 }
 
 void Player::handleInputs(int deltaTime)

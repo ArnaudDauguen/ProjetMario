@@ -5,8 +5,15 @@
 
 void Actor::update(int deltaTime)
 {
-    this->move({ 0.f, this->m_gravityFactor * deltaTime });
+    this->applyGravity(deltaTime);
 }
+
+void Actor::applyGravity(int deltaTime)
+{
+    if (this->m_mass != 0)
+        this->move({ 0.f, this->m_game->gravityStrength * deltaTime });
+}
+
 
 
 void Actor::draw(sf::RenderWindow& window)

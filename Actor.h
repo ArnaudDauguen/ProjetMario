@@ -29,11 +29,11 @@ protected:
 
 	float m_speed = 0.5f;
 	float m_mass;
-	float m_gravityFactor;
 
 	sf::Vector2f calculateMovementVector(sf::Vector2f path);
 
 	virtual void move(sf::Vector2f path);
+	void applyGravity(int deltaTime);
 
 private:
 	

@@ -1,6 +1,8 @@
 #pragma once
 #include <SFML/Graphics/RenderWindow.hpp>
 
+#include "Enemy.h"
+
 
 class World;
 class Player;
@@ -19,10 +21,12 @@ public:
 
 	World* m_world = nullptr;
 	Player* m_player = nullptr;
+	Enemy enemies [1];
 	
 	sf::Vector2u GetScreenSize() const { return m_window.getSize(); }
 	
 	const float m_blocScale = 2.f;
+	float gravityStrength = 0.6f;
 private:
 	sf::RenderWindow& m_window;
 	std::vector<IUpdatableObject*> m_updatableObjects = std::vector<IUpdatableObject*>();

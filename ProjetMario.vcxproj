@@ -130,6 +130,7 @@ xcopy /y /d  "$(ProjectDir)SFML-2.5.1\bin\sfml-window-2.dll" "$(OutDir)"</Comman
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Actor.cpp" />
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
@@ -137,6 +138,7 @@ xcopy /y /d  "$(ProjectDir)SFML-2.5.1\bin\sfml-window-2.dll" "$(OutDir)"</Comman
     <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Actor.h" />
     <ClInclude Include="Collider.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="IDrawableObject.h" />

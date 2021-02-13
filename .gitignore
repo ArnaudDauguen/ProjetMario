@@ -1,5 +1,5 @@
 Debug/
+Release/
+StaticRelease/
 .vs/
-ProjetMario.vcxproj
-ProjetMario.vcxproj.filters
-ProjetMario.vcxproj.user
+

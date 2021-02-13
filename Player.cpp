@@ -8,7 +8,7 @@
 #include "World.h"
 #include "Collider.h"
 
-Player::Player(Game* game, int x, int y, float scale)
+Player::Player(Game* game, int x, int y, float scale, float mass)
 {
     this->m_game = game;
     if (!this->m_texture.loadFromFile("Textures/terrain.png", sf::IntRect(0 + 16 * 11, 0 + 16 * 8, 16, 16)))
@@ -17,6 +17,8 @@ Player::Player(Game* game, int x, int y, float scale)
 	this->m_sprite = sf::Sprite(this->m_texture);
 	this->m_sprite.setPosition(x, y);
 	this->m_sprite.scale(sf::Vector2f (scale, scale));
+    this->m_mass = mass;
+    this->m_gravityFactor = 0.2f * this->m_mass;
 }
 
 void Player::handleInputs(int deltaTime)
@@ -48,19 +50,6 @@ void Player::handleInputs(int deltaTime)
         this->move({0, distance});
     }
 
-}
-
-void Player::update(int deltaTime)
-{
-    // "Gravity"
-	// NEW collision detection system
-    this->move({ 0.f, 0.2f * deltaTime });
-}
-
-
-void Player::draw(sf::RenderWindow& window)
-{
-    window.draw(this->m_sprite);
 }
 
 void Player::move(sf::Vector2f path)

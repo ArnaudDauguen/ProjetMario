@@ -3,6 +3,17 @@
 #include "Collider.h"
 #include "World.h"
 
+void Actor::update(int deltaTime)
+{
+    this->move({ 0.f, this->m_gravityFactor * deltaTime });
+}
+
+
+void Actor::draw(sf::RenderWindow& window)
+{
+    window.draw(this->m_sprite);
+}
+
 
 sf::Vector2f Actor::calculateMovementVector(sf::Vector2f path)
 {
@@ -14,7 +25,7 @@ sf::Vector2f Actor::calculateMovementVector(sf::Vector2f path)
 	{
         blockOnPath.push_back({});
 	}
-    const int numberOfStep = (int)ceil(float(sqrt(path.x * path.x + path.y * path.y)) / this->m_game->m_world->getBlockSize()) * 2;
+    const int numberOfStep = (int)ceil(float(sqrt(path.x * path.x + path.y * path.y)) / this->m_game->m_world->getBlockSize()) * 4;
     Collider::getMapBlockOnPath(&numberOfStep, this->m_game->m_world, this->m_sprite.getPosition(), this->GetCharacterSize().x, this->GetCharacterSize().y, path,
         &blockOnPath, &numberOfPointsPerBound);
 

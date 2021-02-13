@@ -13,16 +13,13 @@ namespace sf {
 
 class Game;
 
-class Player : public Actor, public IDrawableObject, public IUpdatableObject
+class Player : public Actor
 {
 public:
-	Player(Game* game, int x, int y, float scale);
+	Player(Game* game, int x, int y, float scale, float mass);
 
 	void handleInputs(int deltaTime);
 	
-	void update(int deltaTime) override;
-	void draw(sf::RenderWindow& window) override;
-	bool mustDie() override { return false; }
 protected:
 	void move(sf::Vector2f path) override;
 

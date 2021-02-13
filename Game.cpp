@@ -5,7 +5,7 @@
 
 Game::Game(sf::RenderWindow& window) : m_window(window)
 {
-	this->m_player = new Player(this, 640, 120, 1.75f); // world need player
+	this->m_player = new Player(this, 640, 120, 1.75f, 1); // world need player
 	this->m_world = new World(this, 50, 30, this->m_blocScale);
 
 	this->m_updatableObjects.push_back(this->m_player);

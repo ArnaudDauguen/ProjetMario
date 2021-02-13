@@ -1,8 +1,11 @@
 #include "Collider.h"
+
+#include <iostream>
 #include <utility>
 #include <vector>
 
 #include "World.h"
+#include "Actor.h"
 
 bool Collider::isVectorContainingItem(const std::vector<sf::Vector2i>* vector, const sf::Vector2i* itemToSearch)
 {
@@ -14,33 +17,60 @@ bool Collider::isVectorContainingItem(const std::vector<sf::Vector2i>* vector, c
     return false;
 }
 
-void Collider::getMapBlockOnPath(const int* numberOfStep, World* world, sf::Vector2f startingPosition, float width, float heigh, sf::Vector2f path, 
-	std::vector<sf::Vector2i>* firstCornerEncounteredBlocks,
-	std::vector<sf::Vector2i>* secondCornerEncounteredBlocks,
-	std::vector<sf::Vector2i>* thirdCornerEncounteredBlocks,
-	std::vector<sf::Vector2i>* fourthCornerEncounteredBlocks)
+void Collider::getMapBlockOnPath(const int* numberOfStep, const World* world, sf::Vector2f startingPosition, float width, float heigh, sf::Vector2f path, 
+	std::vector<std::vector<sf::Vector2i>>* encounteredBlocks, const int* numberOfPointsPerBound)
 {
     sf::Vector2f travelledDistance = { 0, 0 };
     const sf::Vector2f oneStepTravelDistance = { path.x / *numberOfStep, path.y / *numberOfStep };
+    std::vector<sf::Vector2f> pointsToCheck;
 
-    sf::Vector2f firstCorner = startingPosition;                                   //top left
-    sf::Vector2f secondCorner = {firstCorner.x + width, firstCorner.y};          //top right
-    sf::Vector2f thirdCorner = {firstCorner.x + width, firstCorner.y + heigh}; //bottom right
-    sf::Vector2f fourthCorner = {firstCorner.x, firstCorner.y + heigh};          //bottom left
-
-    sf::Vector2i tmpBlock;
+	for(float i = 0.f; i < *numberOfPointsPerBound; ++i)
+	{
+        float boundAdvancement = i / float(*numberOfPointsPerBound);
+        pointsToCheck.push_back({ startingPosition.x + (width * boundAdvancement), startingPosition.y });                   //top left TO top right
+        pointsToCheck.push_back({ startingPosition.x + width, startingPosition.y + (heigh * boundAdvancement)});          //top right TO bottom right
+        pointsToCheck.push_back({ startingPosition.x + width - (width * boundAdvancement), startingPosition.y + heigh }); //bottom right TO bottom left
+        pointsToCheck.push_back({ startingPosition.x, startingPosition.y + heigh - (heigh * boundAdvancement)});            //bottom left TO top left
+	}
+    
     for(int step = 0; step < *numberOfStep; step++)
     {
-        firstCorner += oneStepTravelDistance;
-        secondCorner += oneStepTravelDistance;
-        thirdCorner += oneStepTravelDistance;
-        fourthCorner += oneStepTravelDistance;
-
-        firstCornerEncounteredBlocks->push_back(world->PositionOnScreenToMapBlockIndex(firstCorner));
-        secondCornerEncounteredBlocks->push_back(world->PositionOnScreenToMapBlockIndex(secondCorner));
-        thirdCornerEncounteredBlocks->push_back(world->PositionOnScreenToMapBlockIndex(thirdCorner));
-        fourthCornerEncounteredBlocks->push_back(world->PositionOnScreenToMapBlockIndex(fourthCorner));
+    	// for each points to check
+    	for(int i = 0; i < pointsToCheck.size(); ++i)
+    	{
+            pointsToCheck[i] += oneStepTravelDistance;
+            encounteredBlocks->at(i).push_back(world->PositionOnScreenToMapBlockIndex(pointsToCheck[i]));
+    	}
     	
         travelledDistance += oneStepTravelDistance;
     }
+}
+
+sf::Vector2f Collider::calculateTravelableDistance(const Actor* actor, const World* world, const int* numberOfStep, sf::Vector2f path,
+    std::vector<std::vector<sf::Vector2i>>* blockOnPath)
+{
+
+    sf::Vector2f travelableDistance = { 0, 0 };
+    const sf::Vector2f stepDistance = { path.x / *numberOfStep, path.y / *numberOfStep };
+    for (int step = 0; step < *numberOfStep; ++step)
+    {
+        bool isValid = true;
+
+    	// Check all points
+    	for(auto vector : *blockOnPath)
+    	{
+			// Check if target block is in map
+            isValid = isValid && vector.at(step).x >= 0
+                && vector.at(step).x < world->GetSize().x
+                && vector.at(step).y >= 0
+                && vector.at(step).y < world->GetSize().y
+                // Check if target block is valid destination
+                && world->GetBlocks()[vector.at(step).x][vector.at(step).y] == -1; //TODO update to allow use of array of valid blockIds
+    	}
+    	
+    	if(isValid) travelableDistance += stepDistance;
+        else break;
+    }
+
+    return travelableDistance;
 }

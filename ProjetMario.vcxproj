@@ -137,11 +137,15 @@ xcopy /y /d  "$(ProjectDir)SFML-2.5.1\bin\sfml-window-2.dll" "$(OutDir)"</Comman
     <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BlocksData.h" />
     <ClInclude Include="Collider.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="IDrawableObject.h" />
     <ClInclude Include="IUpdatableObject.h" />
+    <ClInclude Include="LevelData.h" />
+    <ClInclude Include="Messager.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="SaveReader.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

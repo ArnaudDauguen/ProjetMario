@@ -1,0 +1,16 @@
+{
+	"blocks": [
+		{
+			"id": 1,
+			"textureLocationId": 1
+		},
+		{
+			"id": 2,
+			"textureLocationId": 2
+		},
+		{
+			"id": 3,
+			"textureLocationId": 3
+		}
+	]
+}

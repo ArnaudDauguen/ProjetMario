@@ -35,8 +35,5 @@ private:
 	float m_speed = 0.5f;
 	
 	void move(sf::Vector2f path);
-
-
-	
 };
 

@@ -1,7 +1,11 @@
 #include "Game.h"
 
+#include <iostream>
+
+
 #include "World.h"
 #include "Player.h"
+#include "SaveReader.h"
 
 Game::Game(sf::RenderWindow& window) : m_window(window)
 {
@@ -11,6 +15,10 @@ Game::Game(sf::RenderWindow& window) : m_window(window)
 	this->m_updatableObjects.push_back(this->m_player);
 	this->m_drawableObjects.push_back(this->m_world);
 	this->m_drawableObjects.push_back(this->m_player);
+
+	auto d = SaveReader::GetBlocksData();
+
+	std::cout << d.blocks.size() << std::endl;
 	
 }
 

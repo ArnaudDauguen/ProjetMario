@@ -13,7 +13,7 @@ public:
 	Game(sf::RenderWindow& window);
 	
 
-	void handleInputs(int deltaTime);
+	void handleInputs(int deltaTime, sf::Event* event);
 	void update(int deltaTime);
 	void draw(int deltaTime);
 

@@ -14,7 +14,7 @@
 
 Game::Game(sf::RenderWindow& window) : m_window(window)
 {
-	auto player = new Player(this, 640, 120, 1.75f, 1, {0.5f, 0.f}); // world need player
+	auto player = new Player(this, {640, 120}, 1.75f, 1.f, {0.5f, 0.f}); // world need player
 	this->m_world = new World(this, 50, 30, this->m_blocScale);
 
 	this->m_player = std::make_shared<Player>(*player);
@@ -33,9 +33,9 @@ Game::Game(sf::RenderWindow& window) : m_window(window)
 	}
 }
 
-void Game::handleInputs(int deltaTime)
+void Game::handleInputs(int deltaTime, sf::Event* event)
 {
-	this->m_player->handleInputs(deltaTime);
+	this->m_player->handleInputs(deltaTime, event);
 }
 
 void Game::update(int deltaTime)

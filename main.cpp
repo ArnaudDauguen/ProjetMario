@@ -19,6 +19,10 @@ int main()
         {
             if (event.type == sf::Event::Closed)
                 window.close();
+        	//player jump
+            /*if (event.type == sf::Event::KeyReleased)
+                if (event.key.code == sf::Keyboard::Up)
+                    game.m_player->jump();*/
         }
 
         window.clear();
@@ -27,7 +31,7 @@ int main()
 
         int deltaTime = elapsed.asMilliseconds();
 
-        game.handleInputs(deltaTime);
+        game.handleInputs(deltaTime, &event);
     	
         game.update(deltaTime);
     	

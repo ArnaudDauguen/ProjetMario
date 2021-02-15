@@ -12,7 +12,7 @@ void Actor::applyGravity(int deltaTime) // This module is completely separate fr
     if (this->m_mass == 0)
         return;
 	
-    sf::Vector2f travelableDistance = this->calculateMovementVector({ 0.f, this->m_mass * this->m_game->gravityStrength * deltaTime });
+    sf::Vector2f travelableDistance = this->calculateMovementVector({ 0.f, this->m_mass * this->m_game->m_gravityStrength * deltaTime });
     if (travelableDistance == sf::Vector2f(0.f, 0.f))
         return;
 	
@@ -54,3 +54,21 @@ void Actor::forceMove(sf::Vector2f distance)
 {
     this->m_sprite.move(distance);
 }
+
+void Actor::calculateDeathCollisionBox()
+{
+    this->deathCollisionBox = this->m_sprite.getGlobalBounds();
+}
+
+bool Actor::isColliding(sf::FloatRect* globalBoundToTest)
+{
+    return this->m_sprite.getGlobalBounds().intersects(*globalBoundToTest);
+}
+
+bool Actor::isColliderInKillZone(sf::FloatRect* globalBoundToTest)
+{
+    this->calculateDeathCollisionBox();
+    return this->deathCollisionBox.intersects(*globalBoundToTest);
+}
+
+

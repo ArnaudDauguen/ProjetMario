@@ -4,6 +4,7 @@
 
 EGoomba::EGoomba(Game* game, int x, int y, float scale, float mass, int textureIndex, sf::Vector2f speed)
 {
+	this->calculateDeathCollisionBox();
 	this->m_game = game;
 	if (!this->m_texture.loadFromFile("Textures/terrain.png", sf::IntRect(16 * (textureIndex%16), 16 * (int)floor(textureIndex / 16), 16, 16)))
 		std::cout << "Issue with loading the Goombat texture" << std::endl;
@@ -24,4 +25,14 @@ void EGoomba::move(sf::Vector2f path)
 
 	// MOVE
 	this->m_sprite.move(travelableDistance);
+}
+
+void EGoomba::calculateDeathCollisionBox()
+{
+	this->deathCollisionBox = sf::FloatRect(
+		this->m_sprite.getGlobalBounds().left,
+		this->m_sprite.getGlobalBounds().top,
+		this->m_sprite.getGlobalBounds().width,
+		std::max(2.f, std::min(2.f, this->m_sprite.getGlobalBounds().width * 0.1f))
+	);
 }

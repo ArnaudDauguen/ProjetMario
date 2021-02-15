@@ -7,9 +7,11 @@
 #include "Game.h"
 #include "World.h"
 #include "Collider.h"
+#include "Enemy.h"
 
 Player::Player(Game* game, sf::Vector2f startingPosition, float scale, float mass, sf::Vector2f speed)
 {
+    this->calculateDeathCollisionBox();
     this->m_game = game;
     if (!this->m_texture.loadFromFile("Textures/terrain.png", sf::IntRect(0 + 16 * 11, 0 + 16 * 8, 16, 16)))
 	    std::cout << "Issue with loading the player texture" << std::endl;
@@ -20,6 +22,13 @@ Player::Player(Game* game, sf::Vector2f startingPosition, float scale, float mas
     this->m_mass = mass;
     this->m_speed = speed;
 }
+
+void Player::update(int deltaTime)
+{
+    this->applyGravity(deltaTime);
+    this->checkForCollisions();
+}
+
 
 void Player::handleInputs(int deltaTime, sf::Event* event)
 {
@@ -66,11 +75,11 @@ void Player::applyGravity(int deltaTime)
     if (this->m_speed.y > 0)
     {
 		this->move({ 0.f, -(this->m_speed.y * deltaTime) });
-        this->m_speed.y -= this->m_mass * this->m_game->gravityStrength * deltaTime * 0.025f;
+        this->m_speed.y -= this->m_mass * this->m_game->m_gravityStrength * deltaTime * 0.025f;
         this->m_speed.y = std::max(0.f, this->m_speed.y);
     }
 	// Standard gravity
-    const sf::Vector2f gravityVector = { 0.f, this->m_mass * this->m_game->gravityStrength * deltaTime };
+    const sf::Vector2f gravityVector = { 0.f, this->m_mass * this->m_game->m_gravityStrength * deltaTime };
     this->move(gravityVector);
 
     // Check if on ground
@@ -105,4 +114,35 @@ void Player::jump()
     this->m_speed.y = this->m_jumpStrength;
     this->m_isOnGround = false;
 }
+
+bool Player::mustDie()
+{
+    return this->evolutionStage <= 0;
+}
+
+// check collisions with all other m_enemies in game
+void Player::checkForCollisions()
+{
+    this->calculateDeathCollisionBox();
+    sf::FloatRect hitBox = sf::FloatRect(
+        this->m_sprite.getGlobalBounds().left,
+        this->m_sprite.getGlobalBounds().top + this->m_sprite.getGlobalBounds().height,
+        this->m_sprite.getGlobalBounds().width,
+        std::min(-2.f, std::max(-2.f, -1.f * this->m_sprite.getGlobalBounds().width * 0.1f))
+    );
+    for (auto enemy : this->m_game->m_enemies)
+    {
+        if (enemy->isColliderInKillZone(&hitBox))
+        {
+            enemy->mustDie(true, this);
+            this->jump();
+        }
+        else if (enemy->isColliding(&this->deathCollisionBox))
+        {
+            this->downgrade();
+        }
+    }
+}
+
+
 

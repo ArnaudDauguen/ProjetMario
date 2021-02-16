@@ -54,7 +54,7 @@ void World::Translate(sf::Vector2f distance)
     this->m_position.x += distance.x;
     this->m_position.y += distance.y;
 
-    for (const auto& enemy : this->m_game->enemies)
+    for (const auto& enemy : this->m_game->m_enemies)
     {
         enemy->forceMove(distance);
     }

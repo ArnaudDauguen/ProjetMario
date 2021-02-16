@@ -72,3 +72,14 @@ sf::Vector2f Collider::calculateTravelableDistance(const Actor* actor, const Wor
 
     return travelableDistance;
 }
+
+bool Collider::isGoingOverAHole(const World* world, sf::Vector2f startPosition, sf::Vector2f direction)
+{
+    const sf::Vector2i destinationBlock = world->PositionOnScreenToMapBlockIndex(startPosition + direction);
+    const sf::Vector2i targetBlock = { destinationBlock.x, destinationBlock.y + 1 };
+    if (targetBlock.y > world->GetSize().y - 1) // Out of map, bottom, will die
+        return true;
+    if (targetBlock.x < 0 || targetBlock.x > world->GetSize().x - 1 || targetBlock.y < 0) // out of map, left, top or right, ignore
+        return false;
+    return world->GetBlock(targetBlock) == -1;
+}

@@ -2,6 +2,9 @@
 
 #include <iostream>
 
+#include "../Collider.h"
+#include "../Game.h"
+
 EGoomba::EGoomba(Game* game, sf::Vector2f startingPosition, int textureIndex, sf::Vector2f scale, float mass, sf::Vector2f speed)
 {
 	this->m_game = game;
@@ -45,10 +48,17 @@ sf::Vector2f EGoomba::move(sf::Vector2f path)
 	// CALCULATE MOVEMENT
 	sf::Vector2f travelableDistance = this->calculateMovementVector(path);
 	if (travelableDistance == sf::Vector2f(0.f, 0.f))
+	{
 		this->m_speed *= -1.f;
+		return travelableDistance;
+	}
 
 	// MOVE
 	this->m_sprite.move(travelableDistance);
+
+	// Check for holes for next loop
+	if(this->isGoingOverAHole(travelableDistance))
+		this->m_speed *= -1.f;
 	return travelableDistance;
 }
 

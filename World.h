@@ -27,6 +27,7 @@ public:
 	sf::Vector2i GetSize() const { return m_size; }
 	int** GetBlocks() const { return m_blocks; }
 	int GetBlock(int x, int y) const { return m_blocks[x][y]; }
+	int GetBlock(sf::Vector2i pos) const { return m_blocks[pos.x][pos.y]; }
 	float getBlockSize() const { return this->m_baseBlockSize * this->m_blockScale; }
 	bool mustDie() override { return false; }
 

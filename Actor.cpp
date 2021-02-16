@@ -73,4 +73,13 @@ bool Actor::isColliderInKillZone(sf::FloatRect* globalBoundToTest)
     return this->deathCollisionBox.intersects(*globalBoundToTest);
 }
 
+bool Actor::isGoingOverAHole(sf::Vector2f direction)
+{
+    const sf::Vector2f startPosition = {
+        this->m_sprite.getPosition().x + ((direction.x < 0.f) ? 0 : this->m_sprite.getTexture()->getSize().x * this->m_sprite.getScale().x),
+        this->m_sprite.getPosition().y + this->m_sprite.getTexture()->getSize().y * this->m_sprite.getScale().y
+    };
+	return Collider::isGoingOverAHole(this->m_game->m_world, startPosition, direction);
+}
+
 

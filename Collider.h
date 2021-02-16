@@ -15,6 +15,7 @@ public:
 		std::vector<std::vector<sf::Vector2i>>* encounteredBlocks, const int* numberOfPointsPerBound);
 	static sf::Vector2f calculateTravelableDistance(const Actor* actor, const World* world, const int* numberOfStep, sf::Vector2f path,
 		std::vector<std::vector<sf::Vector2i>>* encounteredBlocks);
+	static bool isGoingOverAHole(const World* world, sf::Vector2f startPosition, sf::Vector2f direction);
 };
 
 #endif

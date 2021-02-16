@@ -44,6 +44,7 @@ protected:
 
 	virtual sf::Vector2f move(sf::Vector2f path);
 	virtual sf::Vector2f applyGravity(int deltaTime);
+	virtual bool isGoingOverAHole(sf::Vector2f direction);
 
 private:
 	

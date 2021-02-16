@@ -1,13 +1,10 @@
 #include "World.h"
 
-
-#include "math.h"
 #include <iostream>
 #include <ostream>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Sprite.hpp>
-
 
 #include "Enemy.h"
 #include "Game.h"
@@ -15,7 +12,7 @@
 
 
 World::World(Game* game, int width, int height, float blockScale) : m_game(game)
-{
+{	
     this->m_blockScale = blockScale;
     this->m_size = sf::Vector2i(width, height);
     this->loadTextures();
@@ -66,6 +63,16 @@ void World::Translate(sf::Vector2f distance)
 
 void World::draw(sf::RenderWindow& window)
 {
+    float bgX = 0.f;
+	for (int i = 0; i < 3; ++i)
+	{
+        bgX = this->GetPosition().x - (1.2f - 0.3f * i) * (this->GetPosition().x / this->GetSize().x * 16 * this->m_game->m_blocScale);
+
+        this->m_backgrounds[i].setTexture(this->m_backgroundTextures[i]);
+		this->m_backgrounds[i].setPosition(bgX, this->GetPosition().y);
+        window.draw(m_backgrounds[i]);
+	}
+	
     for (int y = 0; y < this->GetSize().y; y++) {
         for (int x = 0; x < this->GetSize().x; x++) {
             if (this->m_blocks[x][y] == -1) continue;
@@ -90,6 +97,13 @@ void World::loadTextures()
                 std::cout << "Issue with loading the m_world texture " << y*16 + x << std::endl;
 		}
 	}
+
+    for (int i = 0; i < 3; ++i)
+    {
+        std::string filePath = "Textures/Backgrounds/layer_0" + std::to_string(i + 1) + ".png";
+        if (!this->m_backgroundTextures[i].loadFromFile(filePath))
+            std::cout << "Issue with loading the background texture '" + filePath + "'" << std::endl;
+    }
 }
 
 

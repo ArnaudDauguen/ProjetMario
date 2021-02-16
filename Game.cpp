@@ -9,12 +9,12 @@
 #include "World.h"
 #include "Player.h"
 #include "SaveReader.h"
-#include "Enemy.h"
 #include "Enemies/EGoomba.h"
+#include "Enemies/EThwomp.h"
 
 Game::Game(sf::RenderWindow& window) : m_window(window)
 {
-	auto player = new Player(this, {640, 120}, 1.75f, 1.f, {0.5f, 0.f}); // world need player
+	auto player = new Player(this, {640, 120}, {1.75f, 1.75f}, 1.f, {0.5f, 0.f}); // world need player
 	this->m_world = new World(this, 50, 30, this->m_blocScale);
 
 	this->m_player = std::make_shared<Player>(*player);
@@ -22,15 +22,23 @@ Game::Game(sf::RenderWindow& window) : m_window(window)
 	this->m_updatableObjects.push_back(this->m_player);
 	this->m_drawableObjects.push_back(this->m_player);
 
+	// Spawn Goomba
 	sf::Vector2f speeds[] = { {0.15f, 0.f}, {-0.15f, 0.f} };
 	for(int i = 0; i < 2; i++)
 	{
-		auto goomba = new EGoomba(this, 900, 300, 1.75f, 1, 70, speeds[i]);
+		auto goomba = new EGoomba(this, {900, 300}, {1.75f, 1.75f}, 1, 70, speeds[i]);
 		auto gb = std::make_shared<EGoomba>(*goomba);
 		this->m_enemies.push_back(gb);
 		this->m_updatableObjects.push_back(gb);
 		this->m_drawableObjects.push_back(gb);
 	}
+
+	// Spawn Thwomp
+	auto thwomp = new EThwomp(this, { 1100, 100 }, 46);
+	auto gb = std::make_shared<EThwomp>(*thwomp);
+	this->m_enemies.push_back(gb);
+	this->m_updatableObjects.push_back(gb);
+	this->m_drawableObjects.push_back(gb);
 }
 
 void Game::handleInputs(int deltaTime, sf::Event* event)

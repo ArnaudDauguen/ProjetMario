@@ -5,12 +5,13 @@
 class EGoomba : public Enemy
 {
 public:
-	EGoomba(Game* game, int x, int y, float scale, float mass, int textureIndex, sf::Vector2f speed);
+	EGoomba(Game* game, sf::Vector2f startingPosition, sf::Vector2f scale, float mass, int textureIndex, sf::Vector2f speed);
+	EGoomba(Game* game, sf::Vector2f startingPosition, int textureIndex);
 	~EGoomba() = default;
 	
 	void calculateDeathCollisionBox() override;
 
 protected:
-	void move(sf::Vector2f path) override;
+	sf::Vector2f move(sf::Vector2f path) override;
 };
 

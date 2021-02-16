@@ -9,19 +9,32 @@
 #include "Collider.h"
 #include "Enemy.h"
 
-Player::Player(Game* game, sf::Vector2f startingPosition, float scale, float mass, sf::Vector2f speed)
+Player::Player(Game* game, sf::Vector2f startingPosition, sf::Vector2f scale, float mass, sf::Vector2f speed)
 {
-    this->calculateDeathCollisionBox();
     this->m_game = game;
     if (!this->m_texture.loadFromFile("Textures/terrain.png", sf::IntRect(0 + 16 * 11, 0 + 16 * 8, 16, 16)))
 	    std::cout << "Issue with loading the player texture" << std::endl;
 
 	this->m_sprite = sf::Sprite(this->m_texture);
 	this->m_sprite.setPosition(startingPosition);
-	this->m_sprite.scale(sf::Vector2f (scale, scale));
+	this->m_sprite.scale(scale);
     this->m_mass = mass;
     this->m_speed = speed;
 }
+
+Player::Player(Game* game, sf::Vector2f startingPosition)
+{
+    this->m_game = game;
+    if (!this->m_texture.loadFromFile("Textures/terrain.png", sf::IntRect(0 + 16 * 11, 0 + 16 * 8, 16, 16)))
+	    std::cout << "Issue with loading the player texture" << std::endl;
+
+	this->m_sprite = sf::Sprite(this->m_texture);
+	this->m_sprite.setPosition(startingPosition);
+	this->m_sprite.scale(1.75f, 1.75f);
+    this->m_mass = 1.f;
+    this->m_speed = {0.5f, 0.f};
+}
+
 
 void Player::update(int deltaTime)
 {
@@ -66,11 +79,11 @@ void Player::handleInputs(int deltaTime, sf::Event* event)
 
 }
 
-void Player::applyGravity(int deltaTime)
+sf::Vector2f Player::applyGravity(int deltaTime)
 {
 	// Abort if no weight
     if (this->m_mass == 0.f)
-        return;
+        return {0.f, 0.f};
 	// Apply Jump
     if (this->m_speed.y > 0)
     {
@@ -85,28 +98,32 @@ void Player::applyGravity(int deltaTime)
     // Check if on ground
     const sf::Vector2f travelableDistance = this->calculateMovementVector(gravityVector);
     this->m_isOnGround = travelableDistance.y == 0.f;
+	
+    return travelableDistance;
 }
 
 
-void Player::move(sf::Vector2f path)
+sf::Vector2f Player::move(sf::Vector2f path)
 {
 	// CALCULATE MOVEMENT
     sf::Vector2f travelableDistance = this->calculateMovementVector(path);
 	
     if (travelableDistance == sf::Vector2f{ 0, 0 })
-        return;
+        return travelableDistance;
 	
 	// MOVE
 	//check for world translation (right) and move
     const sf::Vector2f playerToWorldOffset = this->m_game->m_world->CheckForWorldMove(this->m_sprite.getPosition(), travelableDistance);
 	if(playerToWorldOffset != sf::Vector2f{0, 0})
 	{
-        this->m_sprite.move({ travelableDistance.x + playerToWorldOffset.x, travelableDistance.y + playerToWorldOffset.y });
+        sf::Vector2f moveVector = { travelableDistance.x + playerToWorldOffset.x, travelableDistance.y + playerToWorldOffset.y };
+        this->m_sprite.move(moveVector);
         this->m_game->m_world->Translate(playerToWorldOffset);
-        return;
+        return moveVector;
 	}
 	// Standard move if no world translation
     this->m_sprite.move(travelableDistance);
+    return travelableDistance;
 }
 
 void Player::jump()

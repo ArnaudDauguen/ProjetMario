@@ -7,16 +7,17 @@
 #include "World.h"
 #include "Game.h"
 
-void Actor::applyGravity(int deltaTime) // This module is completely separate from the rest of movement methods
+sf::Vector2f Actor::applyGravity(int deltaTime) // This module is completely separate from the rest of movement methods
 {
     if (this->m_mass == 0)
-        return;
+        return {0, 0};
 	
     sf::Vector2f travelableDistance = this->calculateMovementVector({ 0.f, this->m_mass * this->m_game->m_gravityStrength * deltaTime });
     if (travelableDistance == sf::Vector2f(0.f, 0.f))
-        return;
+        return {0, 0};
 	
     this->m_sprite.move(travelableDistance);
+    return travelableDistance;
 }
 
 
@@ -39,15 +40,16 @@ sf::Vector2f Actor::calculateMovementVector(sf::Vector2f path)
         &blockOnPath);
 }
 
-void Actor::move(sf::Vector2f path)
+sf::Vector2f Actor::move(sf::Vector2f path)
 {
     // CALCULATE MOVEMENT
     sf::Vector2f travelableDistance = this->calculateMovementVector(path);
     if (travelableDistance == sf::Vector2f(0.f, 0.f))
-        return;
+        return travelableDistance;
     
     // MOVE
     this->m_sprite.move(travelableDistance);
+    return travelableDistance;
 }
 
 void Actor::forceMove(sf::Vector2f distance)

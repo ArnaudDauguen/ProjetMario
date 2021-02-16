@@ -42,8 +42,8 @@ protected:
 
 	sf::Vector2f calculateMovementVector(sf::Vector2f path);
 
-	virtual void move(sf::Vector2f path);
-	virtual void applyGravity(int deltaTime);
+	virtual sf::Vector2f move(sf::Vector2f path);
+	virtual sf::Vector2f applyGravity(int deltaTime);
 
 private:
 	

@@ -5,7 +5,8 @@
 class EThwomp : public Enemy
 {
 public:
-	EThwomp(Game* game, sf::Vector2f startingPosition, sf::Vector2f scale, float mass, int textureIndex, float playerDetectionXRange, float timeOnGround, float ascendSpeed);
+	EThwomp(Game* game, sf::Vector2f startingPosition, int textureIndex, sf::Vector2f scale, float mass, float playerDetectionXRange, float timeOnGround, float ascendSpeed);
+	EThwomp(Game* game, sf::Vector2f startingPosition, int textureIndex, sf::Vector2f scale);
 	EThwomp(Game* game, sf::Vector2f startingPosition, int textureIndex);
 	~EThwomp() = default;
 
@@ -19,7 +20,7 @@ protected:
 	
 	bool m_waitingForPlayer = true;
 	bool m_isFalling = false;
-	float playerDetectionXRange = 3.f;  // block
+	float playerDetectionXRange = 2.f;  // block
 	float timeOnGround = 2000.f;		// millisecond
 	float ascendSpeed = 1.f;			// block/sec
 	float timer = 0.f;

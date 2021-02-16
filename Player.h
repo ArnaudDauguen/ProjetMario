@@ -14,6 +14,7 @@ class Player : public Actor
 {
 public:
 	Player(Game* game, sf::Vector2f startingPosition, sf::Vector2f scale, float mass, sf::Vector2f speed);
+	Player(Game* game, sf::Vector2f startingPosition, sf::Vector2f scale);
 	Player(Game* game, sf::Vector2f startingPosition);
 
 	void handleInputs(int deltaTime, sf::Event* event);

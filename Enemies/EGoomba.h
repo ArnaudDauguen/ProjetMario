@@ -5,7 +5,8 @@
 class EGoomba : public Enemy
 {
 public:
-	EGoomba(Game* game, sf::Vector2f startingPosition, sf::Vector2f scale, float mass, int textureIndex, sf::Vector2f speed);
+	EGoomba(Game* game, sf::Vector2f startingPosition, int textureIndex, sf::Vector2f scale, float mass, sf::Vector2f speed);
+	EGoomba(Game* game, sf::Vector2f startingPosition, int textureIndex, sf::Vector2f scale);
 	EGoomba(Game* game, sf::Vector2f startingPosition, int textureIndex);
 	~EGoomba() = default;
 	

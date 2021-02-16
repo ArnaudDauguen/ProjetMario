@@ -21,7 +21,18 @@ Player::Player(Game* game, sf::Vector2f startingPosition, sf::Vector2f scale, fl
     this->m_mass = mass;
     this->m_speed = speed;
 }
+Player::Player(Game* game, sf::Vector2f startingPosition, sf::Vector2f scale)
+{
+    this->m_game = game;
+    if (!this->m_texture.loadFromFile("Textures/terrain.png", sf::IntRect(0 + 16 * 11, 0 + 16 * 8, 16, 16)))
+	    std::cout << "Issue with loading the player texture" << std::endl;
 
+	this->m_sprite = sf::Sprite(this->m_texture);
+	this->m_sprite.setPosition(startingPosition);
+	this->m_sprite.scale(scale);
+    this->m_mass = 1.f;
+    this->m_speed = {0.5f, 0.f};
+}
 Player::Player(Game* game, sf::Vector2f startingPosition)
 {
     this->m_game = game;
@@ -35,13 +46,11 @@ Player::Player(Game* game, sf::Vector2f startingPosition)
     this->m_speed = {0.5f, 0.f};
 }
 
-
 void Player::update(int deltaTime)
 {
     this->applyGravity(deltaTime);
     this->checkForCollisions();
 }
-
 
 void Player::handleInputs(int deltaTime, sf::Event* event)
 {

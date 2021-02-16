@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-EGoomba::EGoomba(Game* game, sf::Vector2f startingPosition, sf::Vector2f scale, float mass, int textureIndex, sf::Vector2f speed)
+EGoomba::EGoomba(Game* game, sf::Vector2f startingPosition, int textureIndex, sf::Vector2f scale, float mass, sf::Vector2f speed)
 {
 	this->m_game = game;
 	if (!this->m_texture.loadFromFile("Textures/terrain.png", sf::IntRect(16 * (textureIndex%16), 16 * (int)floor(textureIndex / 16), 16, 16)))
@@ -13,6 +13,18 @@ EGoomba::EGoomba(Game* game, sf::Vector2f startingPosition, sf::Vector2f scale, 
 	this->m_sprite.scale(scale);
 	this->m_mass = mass;
 	this->m_speed = speed;
+}
+EGoomba::EGoomba(Game* game, sf::Vector2f startingPosition, int textureIndex, sf::Vector2f scale)
+{
+	this->m_game = game;
+	if (!this->m_texture.loadFromFile("Textures/terrain.png", sf::IntRect(16 * (textureIndex%16), 16 * (int)floor(textureIndex / 16), 16, 16)))
+		std::cout << "Issue with loading the Goombat texture" << std::endl;
+	//TODO to avoid blanck bounds, use a sf::Image and Image.CreateMaskFromColor(sf::Color(0, 255, 0, 255), 0)
+	this->m_sprite = sf::Sprite(this->m_texture);
+	this->m_sprite.setPosition(startingPosition);
+	this->m_sprite.scale(scale);
+	this->m_mass = 1.f;
+	this->m_speed = {0.1f, 0.f};
 }
 EGoomba::EGoomba(Game* game, sf::Vector2f startingPosition, int textureIndex)
 {

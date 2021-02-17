@@ -21,7 +21,7 @@ public:
 	}
 	
 	void update(int deltaTime) override { this->applyGravity(deltaTime); };
-	void draw(sf::RenderWindow& window) override { window.draw(this->m_sprite); };
+	void draw(sf::RenderWindow& window) override;
 	bool mustDie() override { return isDead; }
 
 	virtual bool isColliding(sf::FloatRect* globalBoundToTest);

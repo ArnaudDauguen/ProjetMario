@@ -7,6 +7,13 @@
 #include "World.h"
 #include "Game.h"
 
+void Actor::draw(sf::RenderWindow& window)
+{
+	if(this->m_game->m_screen.intersects(this->m_sprite.getGlobalBounds()))
+		window.draw(this->m_sprite);
+}
+
+
 sf::Vector2f Actor::applyGravity(int deltaTime) // This module is completely separate from the rest of movement methods
 {
     if (this->m_mass == 0)

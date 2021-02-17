@@ -14,6 +14,11 @@
 
 Game::Game(sf::RenderWindow& window) : m_window(window)
 {
+	this->m_screen = sf::FloatRect(
+		{ 0.f,0.f },
+		{ (float)window.getSize().x, (float)window.getSize().y }
+	);
+	
 	auto player = new Player(this, {640, 120}); // world need player
 	this->m_world = new World(this, 50, 30, this->m_blocScale);
 

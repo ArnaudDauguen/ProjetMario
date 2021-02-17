@@ -72,9 +72,13 @@ void World::draw(sf::RenderWindow& window)
 		this->m_backgrounds[i].setPosition(bgX, this->GetPosition().y);
         window.draw(m_backgrounds[i]);
 	}
+
+    const sf::Vector2i topLeftBlock = this->PositionOnScreenToMapBlockIndex({ 0.f, 0.f });
+	const sf::Vector2i bottomRightBlock = this->PositionOnScreenToMapBlockIndex({ (float)this->m_game->GetScreenSize().x, (float)this->m_game->GetScreenSize().y });
 	
-    for (int y = 0; y < this->GetSize().y; y++) {
-        for (int x = 0; x < this->GetSize().x; x++) {
+    for (int y = topLeftBlock.y -1; y < bottomRightBlock.y +1; y++) {
+        for (int x = topLeftBlock.x -1; x < bottomRightBlock.x +1; x++) {
+            if (x < 0 || y < 0 || x > this->GetSize().x -1 || y > this->GetSize().y -1) continue;
             if (this->m_blocks[x][y] == -1) continue;
 
             //blockSprite.setTexture(this->m_blocks[j][i] == 1 ? m_dirt_texture : m_stone_texture);

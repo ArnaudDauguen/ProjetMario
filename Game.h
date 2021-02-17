@@ -25,6 +25,7 @@ public:
 	
 	const float m_blocScale = 2.f;
 	float m_gravityStrength = 0.6f;
+	sf::FloatRect m_screen;
 private:
 	sf::RenderWindow& m_window;
 	std::vector<std::shared_ptr<IUpdatableObject>> m_updatableObjects = std::vector<std::shared_ptr<IUpdatableObject>>();

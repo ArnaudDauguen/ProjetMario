@@ -19,10 +19,10 @@ public:
 	sf::Color m_hoveredBackgroundColor;
 	sf::Color m_textColor;
 	sf::Color m_hoveredTextColor;
-	sf::Font m_textFont;
+	std::shared_ptr<sf::Font> m_textFont;
 	
 	Button() = default;
-	Button(const std::string& text, sf::Vector2f position);
+	Button(const std::string& text, sf::Vector2f position, std::shared_ptr<sf::Font> font);
 	virtual ~Button() = default;
 
 	virtual void Click(GameState* state) = 0;

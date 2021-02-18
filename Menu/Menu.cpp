@@ -1,7 +1,9 @@
 #include "Menu.h"
 
-Menu::Menu(sf::RenderWindow& window, GameState* state): m_gameState(state), m_window(window), m_selectedButton(0)
+Menu::Menu(sf::RenderWindow& window, GameState* state): m_gameState(state), m_window(window), m_selectedButton(0), m_font(std::make_shared<sf::Font>(sf::Font()))
 {
+	if (!m_font->loadFromFile("Textures/PIXEAB__.TTF"))
+		std::cout << "cannot load font" << std::endl;
 }
 
 void Menu::handleInputs(sf::Event* event)
@@ -39,5 +41,10 @@ void Menu::draw(int deltaTime)
 	{
 		m_window.draw(button->GetBox());
 		m_window.draw(button->GetText());
+	}
+
+	for (const auto& text : m_texts)
+	{
+		m_window.draw(*text);
 	}
 }

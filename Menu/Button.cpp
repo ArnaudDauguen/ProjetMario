@@ -1,11 +1,10 @@
 #include "Button.h"
 
-Button::Button(const std::string& text, sf::Vector2f position): m_hovered(false)
-{
-	if (!m_textFont.loadFromFile("Textures/PIXEAB__.TTF"))
-		std::cout << "Cannot load font" << std::endl;
+#include <utility>
 
-	m_text.setFont(m_textFont);
+Button::Button(const std::string& text, sf::Vector2f position, std::shared_ptr<sf::Font> font): m_hovered(false), m_textFont(std::move(font))
+{
+	m_text.setFont(*m_textFont);
 	m_text.setOutlineThickness(10.f);
 	m_text.setString(text);
 	m_text.setFillColor(m_textColor);

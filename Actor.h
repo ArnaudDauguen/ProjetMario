@@ -31,6 +31,7 @@ public:
 	void forceMove(sf::Vector2f distance);
 	void mustDie(bool mustDie, Actor* killer) { this->m_isDead = mustDie; }
 	bool isDead() const { return this->m_isDead; }
+	sf::Vector2f GetPosition() const { return this->m_sprite.getPosition(); }
 
 protected:
 	Game* m_game;

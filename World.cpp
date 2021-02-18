@@ -42,14 +42,6 @@ void World::Translate(sf::Vector2f distance)
     {
         enemy->forceMove(distance);
     }
-
-	// Update backgrounds
-    float bgX = 0.f;
-    for (int i = 0; i < m_backgroundLenght; ++i)
-    {
-        bgX = this->GetPosition().x - (1.2f - 0.3f * i) * (this->GetPosition().x / this->GetSize().x * 16 * this->m_game->m_blocScale);
-        this->m_backgrounds[i].setPosition(bgX, this->GetPosition().y);
-    }
 }
 
 
@@ -57,8 +49,12 @@ void World::draw(sf::RenderWindow& window)
 {
 	// Draw backgrounds
     float bgX = 0.f;
+    float coef = 0.05f;
+    float coefDifference = coef / m_backgroundLenght;
 	for (int i = 0; i < m_backgroundLenght; ++i)
     {
+        bgX = this->GetPosition().x - (coefDifference * (i + 1)) * (this->m_game->m_player->GetPosition().x + this->GetPosition().x / this->GetSize().x * 16 * this->m_game->m_blocScale);
+        this->m_backgrounds[i].setPosition(bgX, this->GetPosition().y);
         window.draw(m_backgrounds[i]);
 	}
 

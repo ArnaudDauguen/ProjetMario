@@ -4,7 +4,7 @@
 class ButtonQuit : public Button
 {
 public:
-	ButtonQuit(const std::string& text, sf::Vector2f position);
+	ButtonQuit(const std::string& text, sf::Vector2f position, std::shared_ptr<sf::Font> font);
 	
 	void Click(GameState * state) override;
 };

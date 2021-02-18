@@ -14,6 +14,8 @@ protected:
 	
 public:
 	std::vector<Button*> m_buttons;
+	std::vector<sf::Text*> m_texts;
+	std::shared_ptr<sf::Font> m_font;
 
 	Menu(sf::RenderWindow& window, GameState* state);
 	~Menu() = default;

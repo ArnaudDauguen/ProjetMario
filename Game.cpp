@@ -85,11 +85,6 @@ void Game::draw(int deltaTime)
 	}
 }
 
-bool Game::loadTextureFromBlocIndex(sf::Texture* texture, int blocIndex)
-{
-	return false;
-}
-
 void Game::loadAllTextures()
 {
 	sf::Image terainPNG;

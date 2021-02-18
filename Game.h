@@ -24,7 +24,6 @@ public:
 	
 	sf::Vector2u GetScreenSize() const { return m_window.getSize(); }
 	
-	bool loadTextureFromBlocIndex(sf::Texture* texture, int blocIndex);
 	sf::Texture* getTexture(int textureIndex) { return textureIndex < this->m_blockTextureLength ? &this->m_blockTextures[textureIndex] : nullptr; }
 	
 	const float m_blocScale = 2.f;

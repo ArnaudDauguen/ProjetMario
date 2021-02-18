@@ -8,45 +8,20 @@
 
 #include "Enemy.h"
 #include "Game.h"
+#include "SaveReader.h"
 #include "Actors/Player.h"
 
 
-World::World(Game* game, int width, int height, float blockScale, int victoryBlockIndex, std::vector<int>* m_traversableBlocks) : m_game(game), m_victoryBlock(victoryBlockIndex)
+World::World(Game* game, float blockScale, int victoryBlockIndex, std::vector<int>* m_traversableBlocks) : m_game(game), m_victoryBlock(victoryBlockIndex)
 {	
     this->m_blockScale = blockScale;
-    this->m_size = sf::Vector2i(width, height);
     this->loadBackgrounds();
 
     for (int blockIndex : *m_traversableBlocks)
         this->m_traversableBlocks.push_back(blockIndex);
-	
-    this->m_blocks = new int* [width];
-    for (int i = 0; i < width; ++i)
-        this->m_blocks[i] = new int[height];
 
-
-    for (int j = 0; j < height; ++j)
-    {
-	    for (int i = 0; i < width; ++i)
-	    {
-            this->m_blocks[i][j] = -1;
-
-	    	if (j >= 19 && j < 21)
-                if(i < 19 || i > 21)
-					this->m_blocks[i][j] = 2;
-
-            if (j == 15)
-                if (i >= 19 && i <= 21)
-                    this->m_blocks[i][j] = 3;
-	    	
-            if (j >= 21 && j < height - 1)
-                this->m_blocks[i][j] = rand() % 2 == 0 ? 0 : 50;
-            if (i == width - 1)
-                this->m_blocks[i][j] = -1;
-            if (i == width - 3 && j >= 10 && j < 19)
-                this->m_blocks[i][j] = 148;
-	    }
-    }
+    this->m_levelData = SaveReader::GetLevelData();
+    this->m_blocksData = SaveReader::GetBlocksData();
 
 	m_drawingBlockSprite.scale(sf::Vector2f(this->m_game->m_blocScale, this->m_game->m_blocScale));
     
@@ -92,10 +67,10 @@ void World::draw(sf::RenderWindow& window)
     for (int y = topLeftBlock.y -1; y < bottomRightBlock.y +1; y++) {
         for (int x = topLeftBlock.x -1; x < bottomRightBlock.x +1; x++) {
             if (x < 0 || y < 0 || x > this->GetSize().x -1 || y > this->GetSize().y -1) continue;
-            if (this->m_blocks[x][y] == -1) continue;
+            if (this->GetBlockId(x, y) == -1) continue;
 
-            //blockSprite.setTexture(this->m_blocks[j][i] == 1 ? m_dirt_texture : m_stone_texture);
-            m_drawingBlockSprite.setTexture(*this->m_game->getTexture(this->m_blocks[x][y]));
+            int textureId = this->GetBlock(x, y).textureLocationId;
+            m_drawingBlockSprite.setTexture(*this->m_game->getTexture(textureId));
 
             m_drawingBlockSprite.setPosition(x * (16 * this->m_game->m_blocScale) + this->GetPosition().x, y * (16 * this->m_game->m_blocScale) + this->GetPosition().y);
 

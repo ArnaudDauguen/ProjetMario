@@ -4,14 +4,18 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/System/Vector2.hpp>
 
+
+#include "BlocksData.h"
 #include "IDrawableObject.h"
+#include "LevelData.h"
+#include "Messager.h"
 
 class Game;
 
 class World : public IDrawableObject
 {
 public:
-	World(Game* game, int width, int height, float blockScale, int victoryBlockIndex, std::vector<int>* m_traversableBlocks);
+	World(Game* game, float blockScale, int victoryBlockIndex, std::vector<int>* m_traversableBlocks);
 
 	void draw(sf::RenderWindow& window) override;
 	bool mustDie() override { return false; }
@@ -29,10 +33,15 @@ public:
 	sf::Vector2f CheckForWorldMove(sf::Vector2f playerPosition, sf::Vector2f travelableDistance);
 
 	sf::Vector2f GetPosition() const { return m_position; }
-	sf::Vector2i GetSize() const { return m_size; }
-	int** GetBlocks() const { return m_blocks; }
-	int GetBlock(int x, int y) const { return m_blocks[x][y]; }
-	int GetBlock(sf::Vector2i pos) const { return m_blocks[pos.x][pos.y]; }
+	sf::Vector2i GetSize() const { return { m_levelData.width, m_levelData.height }; }
+
+	std::vector<std::vector<int>> GetBlocks() const { return m_levelData.data; }
+	BlockData GetBlock(int x, int y) const { return this->getBlockFromId(m_levelData.data[y][x]); }
+	BlockData GetBlock(sf::Vector2i pos) const { return this->GetBlock(pos.x, pos.y); }
+	int GetBlockId(int x, int y) const { return m_levelData.data[y][x]; }
+	int GetBlockId(sf::Vector2i pos) const { return this->GetBlockId(pos.x, pos.y); }
+	
+	
 	float getBlockSize() const { return this->m_baseBlockSize * this->m_blockScale; }
 	std::vector<int>* GetTraversableBlocks() { return &this->m_traversableBlocks; }
 
@@ -44,11 +53,12 @@ private:
 
 	const int m_baseBlockSize = 16;
 	float m_blockScale;
-
-	sf::Vector2i m_size = sf::Vector2i(0, 0);
+	
 	sf::Vector2f m_position = sf::Vector2f(0, 0);
 
-	int** m_blocks;
+	LevelData m_levelData;
+	BlocksData m_blocksData;
+	
 	std::vector<int> m_traversableBlocks = { -1 };
 
 	sf::Sprite m_drawingBlockSprite;
@@ -65,5 +75,18 @@ private:
 	float m_bottomBoundDistanceInPixels;
 
 	void loadBackgrounds();
+
+
+	BlockData getBlockFromId(int id) const
+	{
+		for (auto block : m_blocksData.blocks)
+		{
+			if (block.id == id)
+				return block;
+		}
+
+		std::string message = "Could not find block with id " + std::to_string(id);
+		Messager::ShowMessageAndExit(message.c_str());
+	}
 };
 

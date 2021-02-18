@@ -14,7 +14,7 @@ int main()
 	
     window.setFramerateLimit(144);
 	
-    while (window.isOpen() && !game.m_world->isLevelComplete() && !game.m_player->isDead())
+    while (window.isOpen() /*&& !game.m_world->isLevelComplete() && !game.m_player->isDead()*/)
     {
         sf::Event event;
         while (window.pollEvent(event))

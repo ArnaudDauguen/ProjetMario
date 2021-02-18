@@ -4,6 +4,7 @@
 
 #include "World.h"
 #include "Actor.h"
+#include "BlocksData.h"
 
 bool Collider::isVectorContainingItem(const std::vector<sf::Vector2i>* vector, const sf::Vector2i* itemToSearch)
 {
@@ -65,21 +66,25 @@ sf::Vector2f Collider::calculateTravelableDistance(const Actor* actor, World* wo
     	// Check all points
     	for(auto vector : *blockOnPath)
     	{
-            bool blockIsVictoryBlock = false;
-            if (world->GetBlocks()[vector.at(step).x][vector.at(step).y] == world->getVictoryBlockIndex())
-            {
-                *isTouchingVictoryBlock = true;
-                blockIsVictoryBlock = true;
-            }
-			// Check if target block is in map
-            isValid = isValid && vector.at(step).x >= 0
+    		// check if target block is in the world
+            if (vector.at(step).x >= 0
                 && vector.at(step).x < world->GetSize().x
                 && vector.at(step).y >= 0
-                && vector.at(step).y < world->GetSize().y
-                // Check if target block is valid destination
-                && (blockIsVictoryBlock
-                    || std::find(world->GetTraversableBlocks()->begin(), world->GetTraversableBlocks()->end(), (world->GetBlocks()[vector.at(step).x][vector.at(step).y])) != world->GetTraversableBlocks()->end()
-                );
+                && vector.at(step).y < world->GetSize().y)
+            {
+                BlockData currentBlock = world->GetBlock(vector.at(step).x, vector.at(step).y);
+                
+                isValid = isValid && currentBlock.ignoreCollisions;
+
+                if (isValid && currentBlock.isVictoryBlock)
+                {
+                    *isTouchingVictoryBlock = true;
+                }
+            	
+            } else
+            {
+                isValid = false;
+            }
     	}
     	
     	if(isValid) travelableDistance += stepDistance;
@@ -97,5 +102,5 @@ bool Collider::isGoingOverAHole(const World* world, sf::Vector2f startPosition, 
         return true;
     if (targetBlock.x < 0 || targetBlock.x > world->GetSize().x - 1 || targetBlock.y < 0) // out of map, left, top or right, ignore
         return false;
-    return world->GetBlock(targetBlock) == -1;
+    return world->GetBlockId(targetBlock) == -1;
 }

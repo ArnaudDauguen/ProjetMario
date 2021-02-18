@@ -16,27 +16,6 @@ EGoomba::EGoomba(Game* game, sf::Vector2f startingPosition, int textureIndex, sf
 	this->m_mass = mass;
 	this->m_speed = speed;
 }
-EGoomba::EGoomba(Game* game, sf::Vector2f startingPosition, int textureIndex, sf::Vector2f scale)
-{
-	this->m_game = game;
-	this->m_texture = *this->m_game->getTexture(textureIndex);
-	this->m_sprite = sf::Sprite(this->m_texture);
-	this->m_sprite.setPosition(startingPosition);
-	this->m_sprite.scale(scale);
-	this->m_mass = 1.f;
-	this->m_speed = {0.1f, 0.f};
-}
-EGoomba::EGoomba(Game* game, sf::Vector2f startingPosition, int textureIndex)
-{
-	this->m_game = game;
-	this->m_texture = *this->m_game->getTexture(textureIndex);
-	this->m_sprite = sf::Sprite(this->m_texture);
-	this->m_sprite.setPosition(startingPosition);
-	this->m_sprite.scale(1.75f, 1.75f);
-	this->m_mass = 1.f;
-	this->m_speed = {0.1f, 0.f};
-}
-
 
 sf::Vector2f EGoomba::move(sf::Vector2f path)
 {

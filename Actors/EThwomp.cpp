@@ -24,32 +24,6 @@ EThwomp::EThwomp(Game* game, sf::Vector2f startingPosition, int textureIndex, sf
 	this->startPosition = startingPosition;
 	this->buildAgroArea();
 }
-EThwomp::EThwomp(Game* game, sf::Vector2f startingPosition, int textureIndex, sf::Vector2f scale)
-{
-	this->m_game = game;
-	this->m_texture = *this->m_game->getTexture(textureIndex);
-	this->m_sprite = sf::Sprite(this->m_texture);
-	this->m_sprite.setPosition(startingPosition);
-	this->m_sprite.scale(scale);
-	this->m_mass = 2.f;
-	this->m_speed = {0, 0};
-
-	this->startPosition = startingPosition;
-	this->buildAgroArea();
-}
-EThwomp::EThwomp(Game* game, sf::Vector2f startingPosition, int textureIndex)
-{
-	this->m_game = game;
-	this->m_texture = *this->m_game->getTexture(textureIndex);
-	this->m_sprite = sf::Sprite(this->m_texture);
-	this->m_sprite.setPosition(startingPosition);
-	this->m_sprite.scale(3.75f, 5.75f);
-	this->m_mass = 2.f;
-	this->m_speed = {0, 0};
-
-	this->startPosition = startingPosition;
-	this->buildAgroArea();
-}
 
 void EThwomp::update(int deltaTime)
 {

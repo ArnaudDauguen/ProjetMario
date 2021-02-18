@@ -6,8 +6,9 @@ class EThwomp : public Enemy
 {
 public:
 	EThwomp(Game* game, sf::Vector2f startingPosition, int textureIndex, sf::Vector2f scale, float mass, float playerDetectionXRange, float timeOnGround, float ascendSpeed);
-	EThwomp(Game* game, sf::Vector2f startingPosition, int textureIndex, sf::Vector2f scale);
-	EThwomp(Game* game, sf::Vector2f startingPosition, int textureIndex);
+	EThwomp(Game* game, sf::Vector2f startingPosition, int textureIndex, sf::Vector2f scale) : EThwomp(game, startingPosition, textureIndex, scale, 2.f, 2.f, 2000.f, 1.f) {};
+	EThwomp(Game* game, sf::Vector2f startingPosition, int textureIndex) : EThwomp(game, startingPosition, textureIndex, { 3.75f, 5.75f }) {};
+	EThwomp(Game* game, sf::Vector2f startingPosition) : EThwomp(game, startingPosition, 46) {};
 	~EThwomp() = default;
 
 	void update(int deltaTime) override;

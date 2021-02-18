@@ -132,21 +132,27 @@ xcopy /y /d  "$(ProjectDir)SFML-2.5.1\bin\sfml-window-2.dll" "$(OutDir)"</Comman
   <ItemGroup>
     <ClCompile Include="Actor.cpp" />
     <ClCompile Include="Collider.cpp" />
+    <ClCompile Include="Actors\EGoomba.cpp" />
+    <ClCompile Include="Actors\EThwomp.cpp" />
+    <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Actors\Player.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor.h" />
     <ClInclude Include="BlocksData.h" />
     <ClInclude Include="Collider.h" />
+    <ClInclude Include="Actors\EGoomba.h" />
+    <ClInclude Include="Actors\EThwomp.h" />
+    <ClInclude Include="Enemy.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="IDrawableObject.h" />
     <ClInclude Include="IUpdatableObject.h" />
     <ClInclude Include="LevelData.h" />
     <ClInclude Include="Messager.h" />
-    <ClInclude Include="Player.h" />
+    <ClInclude Include="Actors\Player.h" />
     <ClInclude Include="SaveReader.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>

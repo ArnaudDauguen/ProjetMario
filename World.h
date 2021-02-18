@@ -8,44 +8,54 @@
 
 class Game;
 
-struct LevelData;
-
 class World : public IDrawableObject
 {
 public:
-	World(Game* game, int width, int height, float blockScale);
-	
+	World(Game* game, int width, int height, float blockScale, int victoryBlockIndex, std::vector<int>* m_traversableBlocks);
+
 	void draw(sf::RenderWindow& window) override;
+	bool mustDie() override { return false; }
+
+	void FinishLevel() { this->isComplete = true; }
+	bool isLevelComplete() const { return this->isComplete; }
+	int getVictoryBlockIndex() const { return this->m_victoryBlock; }
 
 	void Translate(sf::Vector2f distance);
 
-	sf::Vector2f PositionOnScreenToMapPosition(sf::Vector2f positionOnScreen) const ;
-	sf::Vector2i PositionOnMapToMapBlockIndex(sf::Vector2f positionOnMap) const ;
-	sf::Vector2i PositionOnScreenToMapBlockIndex(sf::Vector2f positionOnMap) const ;
+	sf::Vector2f PositionOnScreenToMapPosition(sf::Vector2f positionOnScreen) const;
+	sf::Vector2i PositionOnMapToMapBlockIndex(sf::Vector2f positionOnMap) const;
+	sf::Vector2i PositionOnScreenToMapBlockIndex(sf::Vector2f positionOnMap) const;
 
 	sf::Vector2f CheckForWorldMove(sf::Vector2f playerPosition, sf::Vector2f travelableDistance);
-	
+
 	sf::Vector2f GetPosition() const { return m_position; }
 	sf::Vector2i GetSize() const { return m_size; }
 	int** GetBlocks() const { return m_blocks; }
 	int GetBlock(int x, int y) const { return m_blocks[x][y]; }
+	int GetBlock(sf::Vector2i pos) const { return m_blocks[pos.x][pos.y]; }
 	float getBlockSize() const { return this->m_baseBlockSize * this->m_blockScale; }
-	bool mustDie() override { return false; }
+	std::vector<int>* GetTraversableBlocks() { return &this->m_traversableBlocks; }
 
 private:
 	Game* m_game;
-	
+
+	int m_victoryBlock;
+	bool isComplete = false;
+
 	const int m_baseBlockSize = 16;
 	float m_blockScale;
-	
+
 	sf::Vector2i m_size = sf::Vector2i(0, 0);
 	sf::Vector2f m_position = sf::Vector2f(0, 0);
 
-	LevelData levelData;
+	int** m_blocks;
+	std::vector<int> m_traversableBlocks = { -1 };
 
 	sf::Sprite m_drawingBlockSprite;
-	const int m_blockTextureCount = 256;
-	sf::Texture m_blockTextures[256];
+
+	int m_backgroundLenght = 3;
+	sf::Sprite m_backgrounds[3];
+	sf::Texture m_backgroundTextures[3];
 
 	const float m_leftBoundOnMap = 0.25f;
 	const float m_rightBoundOnMap = 0.75f;
@@ -54,6 +64,6 @@ private:
 	float m_rightBoundDistanceInPixels;
 	float m_bottomBoundDistanceInPixels;
 
-	void loadTextures();
+	void loadBackgrounds();
 };
 

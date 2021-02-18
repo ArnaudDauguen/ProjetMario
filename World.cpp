@@ -1,28 +1,29 @@
 #include "World.h"
 
-
-#include "math.h"
 #include <iostream>
 #include <ostream>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 
+#include "Enemy.h"
 #include "Game.h"
-#include "Player.h"
-#include "SaveReader.h"
+#include "Actors/Player.h"
 
-World::World(Game* game, int width, int height, float blockScale) : m_game(game)
-{
+
+World::World(Game* game, int width, int height, float blockScale, int victoryBlockIndex, std::vector<int>* m_traversableBlocks) : m_game(game), m_victoryBlock(victoryBlockIndex)
+{	
     this->m_blockScale = blockScale;
     this->m_size = sf::Vector2i(width, height);
-    this->loadTextures();
+    this->loadBackgrounds();
+
+    for (int blockIndex : *m_traversableBlocks)
+        this->m_traversableBlocks.push_back(blockIndex);
 	
     this->m_blocks = new int* [width];
     for (int i = 0; i < width; ++i)
         this->m_blocks[i] = new int[height];
 
-    SaveReader::GetLevelData();
 
     for (int j = 0; j < height; ++j)
     {
@@ -38,10 +39,12 @@ World::World(Game* game, int width, int height, float blockScale) : m_game(game)
                 if (i >= 19 && i <= 21)
                     this->m_blocks[i][j] = 3;
 	    	
-            if (j >= 21 && j < height)
+            if (j >= 21 && j < height - 1)
                 this->m_blocks[i][j] = rand() % 2 == 0 ? 0 : 50;
             if (i == width - 1)
                 this->m_blocks[i][j] = -1;
+            if (i == width - 3 && j >= 10 && j < 19)
+                this->m_blocks[i][j] = 148;
 	    }
     }
 
@@ -53,19 +56,46 @@ World::World(Game* game, int width, int height, float blockScale) : m_game(game)
 
 void World::Translate(sf::Vector2f distance)
 {
+	// Move world
     this->m_position.x += distance.x;
     this->m_position.y += distance.y;
+
+	// Move all enemies
+    for (const auto& enemy : this->m_game->m_enemies)
+    {
+        enemy->forceMove(distance);
+    }
+
+	// Update backgrounds
+    float bgX = 0.f;
+    for (int i = 0; i < m_backgroundLenght; ++i)
+    {
+        bgX = this->GetPosition().x - (1.2f - 0.3f * i) * (this->GetPosition().x / this->GetSize().x * 16 * this->m_game->m_blocScale);
+        this->m_backgrounds[i].setPosition(bgX, this->GetPosition().y);
+    }
 }
 
 
 void World::draw(sf::RenderWindow& window)
 {
-    for (int y = 0; y < this->GetSize().y; y++) {
-        for (int x = 0; x < this->GetSize().x; x++) {
+	// Draw backgrounds
+    float bgX = 0.f;
+	for (int i = 0; i < m_backgroundLenght; ++i)
+    {
+        window.draw(m_backgrounds[i]);
+	}
+
+	// Draw world blocks
+    const sf::Vector2i topLeftBlock = this->PositionOnScreenToMapBlockIndex({ 0.f, 0.f });
+	const sf::Vector2i bottomRightBlock = this->PositionOnScreenToMapBlockIndex({ (float)this->m_game->GetScreenSize().x, (float)this->m_game->GetScreenSize().y });
+	
+    for (int y = topLeftBlock.y -1; y < bottomRightBlock.y +1; y++) {
+        for (int x = topLeftBlock.x -1; x < bottomRightBlock.x +1; x++) {
+            if (x < 0 || y < 0 || x > this->GetSize().x -1 || y > this->GetSize().y -1) continue;
             if (this->m_blocks[x][y] == -1) continue;
 
             //blockSprite.setTexture(this->m_blocks[j][i] == 1 ? m_dirt_texture : m_stone_texture);
-            m_drawingBlockSprite.setTexture(this->m_blockTextures[this->m_blocks[x][y]]);
+            m_drawingBlockSprite.setTexture(*this->m_game->getTexture(this->m_blocks[x][y]));
 
             m_drawingBlockSprite.setPosition(x * (16 * this->m_game->m_blocScale) + this->GetPosition().x, y * (16 * this->m_game->m_blocScale) + this->GetPosition().y);
 
@@ -74,16 +104,16 @@ void World::draw(sf::RenderWindow& window)
     }
 }
 
-void World::loadTextures()
+
+void World::loadBackgrounds()
 {
-	for (int y = 0; y < float((this->m_blockTextureCount -1)/16); ++y)
-	{
-		for (int x = 0; x < 16; ++x)
-		{
-            if (!this->m_blockTextures[y * 16 + x].loadFromFile("Textures/terrain.png", sf::IntRect(0 + 16 * x, 0 + 16 * y, 16, 16)))
-                std::cout << "Issue with loading the m_world texture " << y*16 + x << std::endl;
-		}
-	}
+    for (int i = 0; i < this->m_backgroundLenght; ++i)
+    {
+        std::string filePath = "Textures/Backgrounds/layer_0" + std::to_string(i + 1) + ".png";
+        if (!this->m_backgroundTextures[i].loadFromFile(filePath))
+            std::cout << "Issue with loading the background texture '" + filePath + "'" << std::endl;
+        this->m_backgrounds[i].setTexture(this->m_backgroundTextures[i]);
+    }
 }
 
 
@@ -112,14 +142,11 @@ sf::Vector2f World::CheckForWorldMove(sf::Vector2f playerPosition, sf::Vector2f 
     //check for right
     if (xPlayerLocation + this->m_game->m_player->GetCharacterSize().x > (this->m_game->GetScreenSize().x * this->m_rightBoundOnMap))
     { // and check to hide right black pixels
-	    std::cout << this->m_position.x << " " << -m_rightBoundDistanceInPixels << std::endl;
     	if(this->m_position.x > -m_rightBoundDistanceInPixels)
     	{
-	        std::cout << 1 << std::endl;
             worldMove.x = (this->m_game->GetScreenSize().x * this->m_rightBoundOnMap) - (xPlayerLocation + this->m_game->m_player->GetCharacterSize().x);
     	}else
     	{
-	        std::cout << 2 << std::endl;
             worldMove.x = -m_rightBoundDistanceInPixels - this->m_position.x;
     	}
     }

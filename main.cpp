@@ -2,6 +2,8 @@
 #include <SFML/Graphics.hpp>
 
 #include "Game.h"
+#include "World.h"
+#include "Actors/Player.h"
 
 
 int main()
@@ -12,7 +14,7 @@ int main()
 	
     window.setFramerateLimit(144);
 	
-    while (window.isOpen())
+    while (window.isOpen() && !game.m_world->isLevelComplete() && !game.m_player->isDead())
     {
         sf::Event event;
         while (window.pollEvent(event))
@@ -27,7 +29,7 @@ int main()
 
         int deltaTime = elapsed.asMilliseconds();
 
-        game.handleInputs(deltaTime);
+        game.handleInputs(deltaTime, &event);
     	
         game.update(deltaTime);
     	

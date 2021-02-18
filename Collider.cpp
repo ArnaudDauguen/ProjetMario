@@ -1,7 +1,5 @@
 #include "Collider.h"
 
-#include <iostream>
-#include <utility>
 #include <vector>
 
 #include "World.h"
@@ -46,10 +44,18 @@ void Collider::getMapBlockOnPath(const int* numberOfStep, const World* world, sf
     }
 }
 
-sf::Vector2f Collider::calculateTravelableDistance(const Actor* actor, const World* world, const int* numberOfStep, sf::Vector2f path,
-    std::vector<std::vector<sf::Vector2i>>* blockOnPath)
+sf::Vector2f Collider::calculateTravelableDistance(const Actor* actor, World* world, const int* numberOfStep, sf::Vector2f path,
+    std::vector<std::vector<sf::Vector2i>>* encounteredBlocks)
 {
+    bool uselessTmp = false;
+    return Collider::calculateTravelableDistance(actor, world, numberOfStep, path, encounteredBlocks, &uselessTmp);
+}
 
+sf::Vector2f Collider::calculateTravelableDistance(const Actor* actor, World* world, const int* numberOfStep, sf::Vector2f path,
+    std::vector<std::vector<sf::Vector2i>>* blockOnPath, bool* isTouchingVictoryBlock)
+{
+    *isTouchingVictoryBlock = false;
+	
     sf::Vector2f travelableDistance = { 0, 0 };
     const sf::Vector2f stepDistance = { path.x / *numberOfStep, path.y / *numberOfStep };
     for (int step = 0; step < *numberOfStep; ++step)
@@ -59,13 +65,21 @@ sf::Vector2f Collider::calculateTravelableDistance(const Actor* actor, const Wor
     	// Check all points
     	for(auto vector : *blockOnPath)
     	{
+            bool blockIsVictoryBlock = false;
+            if (world->GetBlocks()[vector.at(step).x][vector.at(step).y] == world->getVictoryBlockIndex())
+            {
+                *isTouchingVictoryBlock = true;
+                blockIsVictoryBlock = true;
+            }
 			// Check if target block is in map
             isValid = isValid && vector.at(step).x >= 0
                 && vector.at(step).x < world->GetSize().x
                 && vector.at(step).y >= 0
                 && vector.at(step).y < world->GetSize().y
                 // Check if target block is valid destination
-                && world->GetBlocks()[vector.at(step).x][vector.at(step).y] == -1; //TODO update to allow use of array of valid blockIds
+                && (blockIsVictoryBlock
+                    || std::find(world->GetTraversableBlocks()->begin(), world->GetTraversableBlocks()->end(), (world->GetBlocks()[vector.at(step).x][vector.at(step).y])) != world->GetTraversableBlocks()->end()
+                );
     	}
     	
     	if(isValid) travelableDistance += stepDistance;
@@ -73,4 +87,15 @@ sf::Vector2f Collider::calculateTravelableDistance(const Actor* actor, const Wor
     }
 
     return travelableDistance;
+}
+
+bool Collider::isGoingOverAHole(const World* world, sf::Vector2f startPosition, sf::Vector2f direction)
+{
+    const sf::Vector2i destinationBlock = world->PositionOnScreenToMapBlockIndex(startPosition + direction);
+    const sf::Vector2i targetBlock = { destinationBlock.x, destinationBlock.y + 1 };
+    if (targetBlock.y > world->GetSize().y - 1) // Out of map, bottom, will die
+        return true;
+    if (targetBlock.x < 0 || targetBlock.x > world->GetSize().x - 1 || targetBlock.y < 0) // out of map, left, top or right, ignore
+        return false;
+    return world->GetBlock(targetBlock) == -1;
 }

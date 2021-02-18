@@ -34,9 +34,11 @@ private:
 	sf::RenderWindow& m_window;
 	std::vector<std::shared_ptr<IUpdatableObject>> m_updatableObjects = std::vector<std::shared_ptr<IUpdatableObject>>();
 	std::vector<std::shared_ptr<IDrawableObject>> m_drawableObjects = std::vector<std::shared_ptr<IDrawableObject>>();
-	
-	sf::Image m_blocTextures;
-	const int m_blockTextureLength = 256;
+
+	const int m_xTextureLength = 16;
+	const int m_yTextureLength = 16;
+	const int m_textureSizeOnImage = 16;
+	const int m_blockTextureLength = this->m_xTextureLength * this->m_yTextureLength; // 256
 	sf::Texture m_blockTextures[256];
 
 	void loadAllTextures();

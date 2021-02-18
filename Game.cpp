@@ -18,11 +18,7 @@ Game::Game(sf::RenderWindow& window) : m_window(window)
 		{ 0.f,0.f },
 		{ (float)window.getSize().x, (float)window.getSize().y }
 	);
-
-	// Textures
-	this->m_blocTextures.loadFromFile("Textures/terrain.png");
-	this->m_blocTextures.createMaskFromColor(sf::Color(255, 255, 255)); // Treat White as transparent
-	this->m_blocTextures.createMaskFromColor(sf::Color(214, 127, 255)); // Treat Purple as transparent
+	
 	this->loadAllTextures();
 	
 	auto player = new Player(this, {640, 120}); // world need player to be initialized
@@ -91,16 +87,21 @@ void Game::draw(int deltaTime)
 
 bool Game::loadTextureFromBlocIndex(sf::Texture* texture, int blocIndex)
 {
-	return texture->loadFromImage(this->m_blocTextures, sf::IntRect(16 * (blocIndex % 16), 16 * (int)floor(blocIndex / 16), 16, 16));
+	return false;
 }
 
 void Game::loadAllTextures()
 {
-	for (int y = 0; y < float((this->m_blockTextureLength - 1) / 16); ++y)
+	sf::Image terainPNG;
+	terainPNG.loadFromFile("Textures/terrain.png");
+	terainPNG.createMaskFromColor(sf::Color(255, 255, 255)); // Treat White as transparent
+	terainPNG.createMaskFromColor(sf::Color(214, 127, 255)); // Treat Purple as transparent
+	
+	for (int y = 0; y < this->m_yTextureLength; ++y)
 	{
-		for (int x = 0; x < 16; ++x)
+		for (int x = 0; x < this->m_xTextureLength; ++x)
 		{
-			if (!this->loadTextureFromBlocIndex(&this->m_blockTextures[y * 16 + x], y * 16 + x))
+			if (!this->m_blockTextures[y * this->m_yTextureLength + x].loadFromImage(terainPNG, sf::IntRect(m_textureSizeOnImage * x, m_textureSizeOnImage * y, 16, 16)))
 				std::cout << "Issue with loading the m_world texture " << y * 16 + x << std::endl;
 		}
 	}

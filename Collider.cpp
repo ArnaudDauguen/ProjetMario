@@ -72,7 +72,7 @@ sf::Vector2f Collider::calculateTravelableDistance(const Actor* actor, World* wo
                 && vector.at(step).y >= 0
                 && vector.at(step).y < world->GetSize().y)
             {
-                BlockData currentBlock = world->GetBlock(vector.at(step).x, vector.at(step).y);
+                const BlockData currentBlock = world->GetBlock(vector.at(step).x, vector.at(step).y);
                 
                 isValid = isValid && currentBlock.ignoreCollisions;
 

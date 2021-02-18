@@ -64,9 +64,9 @@ void World::draw(sf::RenderWindow& window)
     const sf::Vector2i topLeftBlock = this->PositionOnScreenToMapBlockIndex({ 0.f, 0.f });
 	const sf::Vector2i bottomRightBlock = this->PositionOnScreenToMapBlockIndex({ (float)this->m_game->GetScreenSize().x, (float)this->m_game->GetScreenSize().y });
 	
-    for (int y = topLeftBlock.y -1; y < bottomRightBlock.y +1; y++) {
-        for (int x = topLeftBlock.x -1; x < bottomRightBlock.x +1; x++) {
-            if (x < 0 || y < 0 || x > this->GetSize().x -1 || y > this->GetSize().y -1) continue;
+    for (int y = topLeftBlock.y - 1; y < bottomRightBlock.y + 1; y++) {
+        for (int x = topLeftBlock.x - 1; x < bottomRightBlock.x + 1; x++) {
+            if (x < 0 || y < 0 || x >= this->GetSize().x || y >= this->GetSize().y) continue;
             if (this->GetBlockId(x, y) == -1) continue;
 
             int textureId = this->GetBlock(x, y).textureLocationId;

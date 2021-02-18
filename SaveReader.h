@@ -21,6 +21,8 @@ inline void from_json(const json& j, BlockData& block_data)
 {
 	j.at("id").get_to(block_data.id);
 	j.at("textureLocationId").get_to(block_data.textureLocationId);
+	j.at("ignoreCollisions").get_to(block_data.ignoreCollisions);
+	j.at("isVictoryBlock").get_to(block_data.isVictoryBlock);
 }
 
 inline void from_json(const json& j, BlocksData& blocks_data)

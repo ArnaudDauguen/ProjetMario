@@ -3,7 +3,7 @@
 		{
 			"id": -1,
 			"textureLocationId": -1,
-			"ignoreCollisions": false,
+			"ignoreCollisions": true,
 			"isVictoryBlock": false
 		},
 		{
@@ -28,7 +28,7 @@
 		
 			"id": 4,
 			"textureLocationId": 148,
-			"ignoreCollisions": false,
+			"ignoreCollisions": true,
 			"isVictoryBlock": true
 		}
 	]

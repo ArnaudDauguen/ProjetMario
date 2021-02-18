@@ -14,6 +14,9 @@
 
 Game::Game(sf::RenderWindow& window) : m_window(window)
 {
+	std::vector<int> traversableBlocks = {}; // air (-1) already set
+	int victoryBlock = 148;
+	
 	this->m_screen = sf::FloatRect(
 		{ 0.f,0.f },
 		{ (float)window.getSize().x, (float)window.getSize().y }
@@ -22,7 +25,7 @@ Game::Game(sf::RenderWindow& window) : m_window(window)
 	this->loadAllTextures();
 	
 	auto player = new Player(this, {640, 120}); // world need player to be initialized
-	this->m_world = new World(this, 50, 30, this->m_blocScale);
+	this->m_world = new World(this, 50, 30, this->m_blocScale, victoryBlock, &traversableBlocks);
 
 	this->m_player = std::make_shared<Player>(*player);
 	

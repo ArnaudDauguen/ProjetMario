@@ -44,14 +44,14 @@ void Collider::getMapBlockOnPath(const int* numberOfStep, const World* world, sf
     }
 }
 
-sf::Vector2f Collider::calculateTravelableDistance(const Actor* actor, const World* world, const int* numberOfStep, sf::Vector2f path,
+sf::Vector2f Collider::calculateTravelableDistance(const Actor* actor, World* world, const int* numberOfStep, sf::Vector2f path,
     std::vector<std::vector<sf::Vector2i>>* encounteredBlocks)
 {
     bool uselessTmp = false;
     return Collider::calculateTravelableDistance(actor, world, numberOfStep, path, encounteredBlocks, &uselessTmp);
 }
 
-sf::Vector2f Collider::calculateTravelableDistance(const Actor* actor, const World* world, const int* numberOfStep, sf::Vector2f path,
+sf::Vector2f Collider::calculateTravelableDistance(const Actor* actor, World* world, const int* numberOfStep, sf::Vector2f path,
     std::vector<std::vector<sf::Vector2i>>* blockOnPath, bool* isTouchingVictoryBlock)
 {
     *isTouchingVictoryBlock = false;
@@ -65,18 +65,21 @@ sf::Vector2f Collider::calculateTravelableDistance(const Actor* actor, const Wor
     	// Check all points
     	for(auto vector : *blockOnPath)
     	{
+            bool blockIsVictoryBlock = false;
+            if (world->GetBlocks()[vector.at(step).x][vector.at(step).y] == world->getVictoryBlockIndex())
+            {
+                *isTouchingVictoryBlock = true;
+                blockIsVictoryBlock = true;
+            }
 			// Check if target block is in map
             isValid = isValid && vector.at(step).x >= 0
                 && vector.at(step).x < world->GetSize().x
                 && vector.at(step).y >= 0
                 && vector.at(step).y < world->GetSize().y
                 // Check if target block is valid destination
-                && ( //TODO update to allow use of array of valid blockIds
-                    world->GetBlocks()[vector.at(step).x][vector.at(step).y] == -1
-                    || world->GetBlocks()[vector.at(step).x][vector.at(step).y] == 148
+                && (blockIsVictoryBlock
+                    || std::find(world->GetTraversableBlocks()->begin(), world->GetTraversableBlocks()->end(), (world->GetBlocks()[vector.at(step).x][vector.at(step).y])) != world->GetTraversableBlocks()->end()
                 );
-            if (world->GetBlocks()[vector.at(step).x][vector.at(step).y] == 148)
-                *isTouchingVictoryBlock = true;
     	}
     	
     	if(isValid) travelableDistance += stepDistance;

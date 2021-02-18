@@ -11,11 +11,14 @@
 #include "Actors/Player.h"
 
 
-World::World(Game* game, int width, int height, float blockScale) : m_game(game)
+World::World(Game* game, int width, int height, float blockScale, int victoryBlockIndex, std::vector<int>* m_traversableBlocks) : m_game(game), m_victoryBlock(victoryBlockIndex)
 {	
     this->m_blockScale = blockScale;
     this->m_size = sf::Vector2i(width, height);
     this->loadAllTextures();
+
+    for (int blockIndex : *m_traversableBlocks)
+        this->m_traversableBlocks.push_back(blockIndex);
 	
     this->m_blocks = new int* [width];
     for (int i = 0; i < width; ++i)

@@ -48,7 +48,7 @@ void Player::update(int deltaTime)
 
 void Player::handleInputs(int deltaTime, sf::Event* event)
 {
-    if (this->isDead)
+    if (this->m_isDead)
         return;
 	
     float deltatime = float(deltaTime);
@@ -143,10 +143,10 @@ void Player::jump()
 
 bool Player::mustDie()
 {
-    this->isDead =
+    this->m_isDead =
         this->evolutionStage <= 0
         || this->m_game->m_world->PositionOnScreenToMapBlockIndex(this->m_sprite.getPosition()).y >= this->m_game->m_world->GetSize().y - 1;
-    return this->isDead;
+    return this->m_isDead;
 }
 
 // check collisions with all other m_enemies in game

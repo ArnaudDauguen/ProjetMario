@@ -16,6 +16,9 @@ public:
 	void draw(sf::RenderWindow& window) override;
 	bool mustDie() override { return false; }
 
+	void FinishLevel() { this->isComplete = true; }
+	bool isLevelComplete() const { return this->isComplete; }
+
 	void Translate(sf::Vector2f distance);
 
 	sf::Vector2f PositionOnScreenToMapPosition(sf::Vector2f positionOnScreen) const;
@@ -33,6 +36,8 @@ public:
 
 private:
 	Game* m_game;
+
+	bool isComplete = false;
 
 	const int m_baseBlockSize = 16;
 	float m_blockScale;

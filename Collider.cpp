@@ -45,9 +45,17 @@ void Collider::getMapBlockOnPath(const int* numberOfStep, const World* world, sf
 }
 
 sf::Vector2f Collider::calculateTravelableDistance(const Actor* actor, const World* world, const int* numberOfStep, sf::Vector2f path,
-    std::vector<std::vector<sf::Vector2i>>* blockOnPath)
+    std::vector<std::vector<sf::Vector2i>>* encounteredBlocks)
 {
+    bool uselessTmp = false;
+    return Collider::calculateTravelableDistance(actor, world, numberOfStep, path, encounteredBlocks, &uselessTmp);
+}
 
+sf::Vector2f Collider::calculateTravelableDistance(const Actor* actor, const World* world, const int* numberOfStep, sf::Vector2f path,
+    std::vector<std::vector<sf::Vector2i>>* blockOnPath, bool* isTouchingVictoryBlock)
+{
+    *isTouchingVictoryBlock = false;
+	
     sf::Vector2f travelableDistance = { 0, 0 };
     const sf::Vector2f stepDistance = { path.x / *numberOfStep, path.y / *numberOfStep };
     for (int step = 0; step < *numberOfStep; ++step)
@@ -63,7 +71,12 @@ sf::Vector2f Collider::calculateTravelableDistance(const Actor* actor, const Wor
                 && vector.at(step).y >= 0
                 && vector.at(step).y < world->GetSize().y
                 // Check if target block is valid destination
-                && world->GetBlocks()[vector.at(step).x][vector.at(step).y] == -1; //TODO update to allow use of array of valid blockIds
+                && ( //TODO update to allow use of array of valid blockIds
+                    world->GetBlocks()[vector.at(step).x][vector.at(step).y] == -1
+                    || world->GetBlocks()[vector.at(step).x][vector.at(step).y] == 148
+                );
+            if (world->GetBlocks()[vector.at(step).x][vector.at(step).y] == 148)
+                *isTouchingVictoryBlock = true;
     	}
     	
     	if(isValid) travelableDistance += stepDistance;

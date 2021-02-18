@@ -40,6 +40,8 @@ World::World(Game* game, int width, int height, float blockScale) : m_game(game)
                 this->m_blocks[i][j] = rand() % 2 == 0 ? 0 : 50;
             if (i == width - 1)
                 this->m_blocks[i][j] = -1;
+            if (i == width - 3 && j >= 10 && j < 19)
+                this->m_blocks[i][j] = 148;
 	    }
     }
 

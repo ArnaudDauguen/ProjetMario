@@ -48,6 +48,9 @@ void Player::update(int deltaTime)
 
 void Player::handleInputs(int deltaTime, sf::Event* event)
 {
+    if (this->isDead)
+        return;
+	
     float deltatime = float(deltaTime);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
     {
@@ -109,7 +112,10 @@ sf::Vector2f Player::applyGravity(int deltaTime)
 sf::Vector2f Player::move(sf::Vector2f path)
 {
 	// CALCULATE MOVEMENT
-    sf::Vector2f travelableDistance = this->calculateMovementVector(path);
+    bool isTouchingVictoryBlock = false;
+    sf::Vector2f travelableDistance = this->calculateMovementVector(path, &isTouchingVictoryBlock);
+    if (isTouchingVictoryBlock)
+        this->m_game->m_world->FinishLevel();
 	
     if (travelableDistance == sf::Vector2f{ 0, 0 })
         return travelableDistance;
@@ -137,7 +143,10 @@ void Player::jump()
 
 bool Player::mustDie()
 {
-    return this->evolutionStage <= 0;
+    this->isDead =
+        this->evolutionStage <= 0
+        || this->m_game->m_world->PositionOnScreenToMapBlockIndex(this->m_sprite.getPosition()).y >= this->m_game->m_world->GetSize().y - 1;
+    return this->isDead;
 }
 
 // check collisions with all other m_enemies in game

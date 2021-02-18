@@ -2,6 +2,8 @@
 #include <SFML/Graphics.hpp>
 
 #include "Game.h"
+#include "World.h"
+#include "Actors/Player.h"
 
 
 int main()
@@ -12,7 +14,7 @@ int main()
 	
     window.setFramerateLimit(144);
 	
-    while (window.isOpen())
+    while (window.isOpen() && !game.m_world->isLevelComplete() && !game.m_player->isActorDead())
     {
         sf::Event event;
         while (window.pollEvent(event))

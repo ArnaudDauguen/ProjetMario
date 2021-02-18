@@ -15,7 +15,7 @@ World::World(Game* game, int width, int height, float blockScale, int victoryBlo
 {	
     this->m_blockScale = blockScale;
     this->m_size = sf::Vector2i(width, height);
-    this->loadAllTextures();
+    this->loadBackgrounds();
 
     for (int blockIndex : *m_traversableBlocks)
         this->m_traversableBlocks.push_back(blockIndex);
@@ -105,7 +105,7 @@ void World::draw(sf::RenderWindow& window)
 }
 
 
-void World::loadAllTextures()
+void World::loadBackgrounds()
 {
     for (int i = 0; i < this->m_backgroundLenght; ++i)
     {

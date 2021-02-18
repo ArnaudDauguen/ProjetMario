@@ -64,6 +64,6 @@ private:
 	float m_rightBoundDistanceInPixels;
 	float m_bottomBoundDistanceInPixels;
 
-	void loadAllTextures();
+	void loadBackgrounds();
 };
 

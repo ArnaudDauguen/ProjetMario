@@ -8,6 +8,8 @@
 
 class Game;
 
+struct LevelData;
+
 class World : public IDrawableObject
 {
 public:
@@ -39,7 +41,7 @@ private:
 	sf::Vector2i m_size = sf::Vector2i(0, 0);
 	sf::Vector2f m_position = sf::Vector2f(0, 0);
 
-	int** m_blocks;
+	LevelData levelData;
 
 	sf::Sprite m_drawingBlockSprite;
 	const int m_blockTextureCount = 256;

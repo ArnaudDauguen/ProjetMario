@@ -10,7 +10,7 @@
 
 #include "Game.h"
 #include "Player.h"
-
+#include "SaveReader.h"
 
 World::World(Game* game, int width, int height, float blockScale) : m_game(game)
 {
@@ -22,6 +22,7 @@ World::World(Game* game, int width, int height, float blockScale) : m_game(game)
     for (int i = 0; i < width; ++i)
         this->m_blocks[i] = new int[height];
 
+    SaveReader::GetLevelData();
 
     for (int j = 0; j < height; ++j)
     {

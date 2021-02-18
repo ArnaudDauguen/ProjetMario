@@ -22,7 +22,10 @@ Game::Game(sf::RenderWindow& window) : m_window(window)
 	this->loadAllTextures();
 
 	Player* player = nullptr;
-	
+
+	this->m_world = new World(this, this->m_blocScale);
+
+	// Load actors
 	auto actors = SaveReader::GetActorsData();
 	for (const auto& actor : actors.actors)
 	{
@@ -31,14 +34,9 @@ Game::Game(sf::RenderWindow& window) : m_window(window)
 		case 0:
 			{
 				player = new Player(this, { actor.spawnX, actor.spawnY });
-				
-				this->m_world = new World(this, this->m_blocScale);
-				
 				this->m_player = std::make_shared<Player>(*player);
-				
 				this->m_updatableObjects.push_back(this->m_player);
 				this->m_drawableObjects.push_back(this->m_player);
-				
 				break;
 			}
 		case 1:

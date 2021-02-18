@@ -46,14 +46,14 @@ void Collider::getMapBlockOnPath(const int* numberOfStep, const World* world, sf
 }
 
 sf::Vector2f Collider::calculateTravelableDistance(const Actor* actor, World* world, const int* numberOfStep, sf::Vector2f path,
-    std::vector<std::vector<sf::Vector2i>>* encounteredBlocks)
+    std::vector<std::vector<sf::Vector2i>>* encounteredBlocksForEachPoints)
 {
     bool uselessTmp = false;
-    return Collider::calculateTravelableDistance(actor, world, numberOfStep, path, encounteredBlocks, &uselessTmp);
+    return Collider::calculateTravelableDistance(actor, world, numberOfStep, path, encounteredBlocksForEachPoints, &uselessTmp);
 }
 
 sf::Vector2f Collider::calculateTravelableDistance(const Actor* actor, World* world, const int* numberOfStep, sf::Vector2f path,
-    std::vector<std::vector<sf::Vector2i>>* blockOnPath, bool* isTouchingVictoryBlock)
+    std::vector<std::vector<sf::Vector2i>>* encounteredBlocksForEachPoints, bool* isTouchingVictoryBlock)
 {
     *isTouchingVictoryBlock = false;
 	
@@ -61,33 +61,35 @@ sf::Vector2f Collider::calculateTravelableDistance(const Actor* actor, World* wo
     const sf::Vector2f stepDistance = { path.x / *numberOfStep, path.y / *numberOfStep };
     for (int step = 0; step < *numberOfStep; ++step)
     {
-        bool isValid = true;
+        bool isStepValidForMove = true;
 
-    	// Check all points
-    	for(auto vector : *blockOnPath)
+    	// Check all collisions points
+    	for(auto encounteredBlocks : *encounteredBlocksForEachPoints)
     	{
+            if (!isStepValidForMove) continue;
+    		
     		// check if target block is in the world
-            if (vector.at(step).x >= 0
-                && vector.at(step).x < world->GetSize().x
-                && vector.at(step).y >= 0
-                && vector.at(step).y < world->GetSize().y)
+            if (encounteredBlocks.at(step).x >= 0
+                && encounteredBlocks.at(step).x < world->GetSize().x
+                && encounteredBlocks.at(step).y >= 0
+                && encounteredBlocks.at(step).y < world->GetSize().y)
             {
-                const BlockData currentBlock = world->GetBlock(vector.at(step).x, vector.at(step).y);
+                const BlockData currentBlock = world->GetBlock(encounteredBlocks.at(step).x, encounteredBlocks.at(step).y);
                 
-                isValid = isValid && currentBlock.ignoreCollisions;
+                isStepValidForMove = currentBlock.ignoreCollisions;
 
-                if (isValid && currentBlock.isVictoryBlock)
+                if (isStepValidForMove && currentBlock.isVictoryBlock)
                 {
                     *isTouchingVictoryBlock = true;
                 }
             	
             } else
             {
-                isValid = false;
+                isStepValidForMove = false;
             }
     	}
     	
-    	if(isValid) travelableDistance += stepDistance;
+    	if(isStepValidForMove) travelableDistance += stepDistance;
         else break;
     }
 

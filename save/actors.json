@@ -3,8 +3,8 @@
 		[
 			{
 				"type": 0,
-				"spawnX": 640.0,
-				"spawnY": 120.0,
+				"spawnX": 0.0,
+				"spawnY": 300.0,
 				"textureLocationId": 139
 			},
 			{

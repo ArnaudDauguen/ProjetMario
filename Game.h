@@ -12,7 +12,7 @@ class Game
 {
 public:
 	Game(sf::RenderWindow& window);
-	
+	// ~Game();
 
 	void handleInputs(int deltaTime, sf::Event* event);
 	void update(int deltaTime);

@@ -17,7 +17,6 @@ void Menu::handleInputs(sf::Event* event)
 			break;
 		case sf::Keyboard::Enter:
 		case sf::Keyboard::Space:
-			std::cout << "click" << std::endl;
 			m_buttons.at(m_selectedButton)->Click(m_gameState);
 			break;
 		default:

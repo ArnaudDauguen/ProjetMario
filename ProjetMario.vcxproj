@@ -144,7 +144,6 @@ xcopy /y /d  "$(ProjectDir)SFML-2.5.1\bin\sfml-window-2.dll" "$(OutDir)"</Comman
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Actors\Player.cpp" />
     <ClCompile Include="Menu\Menu.cpp" />
-    <ClCompile Include="Player.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -167,13 +166,8 @@ xcopy /y /d  "$(ProjectDir)SFML-2.5.1\bin\sfml-window-2.dll" "$(OutDir)"</Comman
     <ClInclude Include="Menu\Menu.h" />
     <ClInclude Include="Messager.h" />
     <ClInclude Include="Actors\Player.h" />
-    <ClInclude Include="Player.h" />
-    <ClInclude Include="resource.h" />
     <ClInclude Include="SaveReader.h" />
     <ClInclude Include="World.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="ProjetMario.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

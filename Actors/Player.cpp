@@ -52,6 +52,7 @@ void Player::handleInputs(int deltaTime, sf::Event* event)
     }
 	// if player didnt release jump key, he will infinitely jump, block that
     if (event->type == sf::Event::KeyReleased)
+        
         if (event->key.code == this->m_jumpKey)
             this->m_hasAlreadyJumped = false;
                    

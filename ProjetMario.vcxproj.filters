@@ -110,9 +110,6 @@
     <ClInclude Include="ActorsData.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="GameState.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
@@ -131,10 +128,5 @@
     <ClInclude Include="Menu\MenuMain.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="ProjetMario.rc">
-      <Filter>Fichiers de ressources</Filter>
-    </ResourceCompile>
   </ItemGroup>
 </Project>

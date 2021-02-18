@@ -12,6 +12,15 @@
 #include "Actors/EGoomba.h"
 #include "Actors/EThwomp.h"
 
+/*Game::~Game()
+{
+	m_updatableObjects.clear();
+	m_drawableObjects.clear();
+	m_enemies.clear();
+	
+	delete m_world;
+}*/
+
 Game::Game(sf::RenderWindow& window) : m_window(window)
 {
 	this->m_screen = sf::FloatRect(

@@ -16,6 +16,7 @@ class World : public IDrawableObject
 {
 public:
 	World(Game* game, float blockScale);
+	// ~World();
 
 	void draw(sf::RenderWindow& window) override;
 	bool mustDie() override { return false; }

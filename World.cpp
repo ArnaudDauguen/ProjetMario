@@ -26,6 +26,11 @@ World::World(Game* game, float blockScale) : m_game(game)
     this->m_bottomBoundDistanceInPixels = this->GetSize().y * this->getBlockSize() - this->m_game->GetScreenSize().y;
 }
 
+/*World::~World()
+{
+    delete m_game;
+}*/
+
 void World::Translate(sf::Vector2f distance)
 {
 	// Move world

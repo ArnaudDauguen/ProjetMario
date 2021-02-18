@@ -1,0 +1,29 @@
+{
+	"actors":
+		[
+			{
+				"type": 0,
+				"spawnX": 640.0,
+				"spawnY": 120.0,
+				"textureLocationId": 139
+			},
+			{
+				"type": 1,
+				"spawnX": 150.0,
+				"spawnY": 300.0,
+				"textureLocationId": 70
+			},
+			{
+				"type": 1,
+				"spawnX": 900.0,
+				"spawnY": 300.0,
+				"textureLocationId": 70
+			},
+			{
+				"type": 2,
+				"spawnX": 1100.0,
+				"spawnY": 100.0,
+				"textureLocationId": 46
+			}
+		]
+}

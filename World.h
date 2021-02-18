@@ -15,14 +15,13 @@ class Game;
 class World : public IDrawableObject
 {
 public:
-	World(Game* game, float blockScale, int victoryBlockIndex, std::vector<int>* m_traversableBlocks);
+	World(Game* game, float blockScale);
 
 	void draw(sf::RenderWindow& window) override;
 	bool mustDie() override { return false; }
 
 	void FinishLevel() { this->isComplete = true; }
 	bool isLevelComplete() const { return this->isComplete; }
-	int getVictoryBlockIndex() const { return this->m_victoryBlock; }
 
 	void Translate(sf::Vector2f distance);
 
@@ -43,12 +42,10 @@ public:
 	
 	
 	float getBlockSize() const { return this->m_baseBlockSize * this->m_blockScale; }
-	std::vector<int>* GetTraversableBlocks() { return &this->m_traversableBlocks; }
 
 private:
 	Game* m_game;
-
-	int m_victoryBlock;
+	
 	bool isComplete = false;
 
 	const int m_baseBlockSize = 16;
@@ -58,8 +55,6 @@ private:
 
 	LevelData m_levelData;
 	BlocksData m_blocksData;
-	
-	std::vector<int> m_traversableBlocks = { -1 };
 
 	sf::Sprite m_drawingBlockSprite;
 

@@ -12,13 +12,10 @@
 #include "Actors/Player.h"
 
 
-World::World(Game* game, float blockScale, int victoryBlockIndex, std::vector<int>* m_traversableBlocks) : m_game(game), m_victoryBlock(victoryBlockIndex)
+World::World(Game* game, float blockScale) : m_game(game)
 {	
     this->m_blockScale = blockScale;
     this->loadBackgrounds();
-
-    for (int blockIndex : *m_traversableBlocks)
-        this->m_traversableBlocks.push_back(blockIndex);
 
     this->m_levelData = SaveReader::GetLevelData();
     this->m_blocksData = SaveReader::GetBlocksData();

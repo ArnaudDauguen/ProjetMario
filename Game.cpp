@@ -14,41 +14,59 @@
 
 Game::Game(sf::RenderWindow& window) : m_window(window)
 {
-	std::vector<int> traversableBlocks = {}; // air (-1) already set
-	int victoryBlock = 148;
-	
 	this->m_screen = sf::FloatRect(
 		{ 0.f,0.f },
 		{ (float)window.getSize().x, (float)window.getSize().y }
 	);
 	
 	this->loadAllTextures();
-	
-	auto player = new Player(this, {640, 120}); // world need player to be initialized
-	this->m_world = new World(this, this->m_blocScale, victoryBlock, &traversableBlocks);
 
-	this->m_player = std::make_shared<Player>(*player);
+	Player* player = nullptr;
 	
-	this->m_updatableObjects.push_back(this->m_player);
-	this->m_drawableObjects.push_back(this->m_player);
-
-	// Spawn Goomba
-	sf::Vector2f speeds[] = { {0.15f, 0.f}, {-0.15f, 0.f} };
-	for(int i = 0; i < 2; i++)
+	auto actors = SaveReader::GetActorsData();
+	for (const auto& actor : actors.actors)
 	{
-		auto goomba = new EGoomba(this, {900, 300}, 70, {1.75f, 1.75f}, 0.5f, speeds[i]);
-		auto gb = std::make_shared<EGoomba>(*goomba);
-		this->m_enemies.push_back(gb);
-		this->m_updatableObjects.push_back(gb);
-		this->m_drawableObjects.push_back(gb);
+		switch (actor.type)
+		{
+		case 0:
+			{
+				player = new Player(this, { actor.spawnX, actor.spawnY });
+				
+				this->m_world = new World(this, this->m_blocScale);
+				
+				this->m_player = std::make_shared<Player>(*player);
+				
+				this->m_updatableObjects.push_back(this->m_player);
+				this->m_drawableObjects.push_back(this->m_player);
+				
+				break;
+			}
+		case 1:
+			{
+				const auto goomba = new EGoomba(this, { actor.spawnX, actor.spawnY }, actor.textureLocationId, { 1.75f, 1.75f });
+				auto gb = std::make_shared<EGoomba>(*goomba);
+				this->m_enemies.push_back(gb);
+				this->m_updatableObjects.push_back(gb);
+				this->m_drawableObjects.push_back(gb);
+				break;
+			}
+		case 2:
+			{
+				const auto thwomp = new EThwomp(this, { actor.spawnX, actor.spawnY }, actor.textureLocationId, { 3.75, 5.75 });
+				auto gb = std::make_shared<EThwomp>(*thwomp);
+				this->m_enemies.push_back(gb);
+				this->m_updatableObjects.push_back(gb);
+				this->m_drawableObjects.push_back(gb);
+				break;
+			}
+		}
 	}
 
-	// Spawn Thwomp
-	auto thwomp = new EThwomp(this, { 1100, 100 }, 46, {3.75, 5.75});
-	auto gb = std::make_shared<EThwomp>(*thwomp);
-	this->m_enemies.push_back(gb);
-	this->m_updatableObjects.push_back(gb);
-	this->m_drawableObjects.push_back(gb);
+	if (player == nullptr)
+	{
+		Messager::ShowMessageAndExit("You have to declare a player in file actors.json.");
+		return;
+	}
 }
 
 void Game::handleInputs(int deltaTime, sf::Event* event)

@@ -146,6 +146,7 @@ xcopy /y /d  "$(ProjectDir)SFML-2.5.1\bin\sfml-window-2.dll" "$(OutDir)"</Comman
     <ClInclude Include="Collider.h" />
     <ClInclude Include="Actors\EGoomba.h" />
     <ClInclude Include="Actors\EThwomp.h" />
+    <ClInclude Include="ActorsData.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="IDrawableObject.h" />

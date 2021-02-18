@@ -2,7 +2,7 @@
 
 #include <SFML/Window/Keyboard.hpp>
 
-#include "Actor.h"
+#include "../Actor.h"
 
 namespace sf {
 	class RenderWindow;
@@ -13,8 +13,8 @@ class Game;
 class Player : public Actor
 {
 public:
-	Player(Game* game, sf::Vector2f startingPosition, sf::Vector2f scale, float mass, sf::Vector2f speed);
-	Player(Game* game, sf::Vector2f startingPosition, sf::Vector2f scale);
+	Player(Game* game, sf::Vector2f startingPosition, int textureIndex, sf::Vector2f scale, float mass, sf::Vector2f speed);
+	Player(Game* game, sf::Vector2f startingPosition, int textureIndex, sf::Vector2f scale);
 	Player(Game* game, sf::Vector2f startingPosition);
 
 	void handleInputs(int deltaTime, sf::Event* event);

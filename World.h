@@ -14,6 +14,7 @@ public:
 	World(Game* game, int width, int height, float blockScale);
 
 	void draw(sf::RenderWindow& window) override;
+	bool mustDie() override { return false; }
 
 	void Translate(sf::Vector2f distance);
 
@@ -29,7 +30,6 @@ public:
 	int GetBlock(int x, int y) const { return m_blocks[x][y]; }
 	int GetBlock(sf::Vector2i pos) const { return m_blocks[pos.x][pos.y]; }
 	float getBlockSize() const { return this->m_baseBlockSize * this->m_blockScale; }
-	bool mustDie() override { return false; }
 
 private:
 	Game* m_game;
@@ -43,9 +43,8 @@ private:
 	int** m_blocks;
 
 	sf::Sprite m_drawingBlockSprite;
-	const int m_blockTextureCount = 256;
-	sf::Texture m_blockTextures[256];
 
+	int m_backgroundLenght = 3;
 	sf::Sprite m_backgrounds[3];
 	sf::Texture m_backgroundTextures[3];
 
@@ -56,6 +55,6 @@ private:
 	float m_rightBoundDistanceInPixels;
 	float m_bottomBoundDistanceInPixels;
 
-	void loadTextures();
+	void loadAllTextures();
 };
 

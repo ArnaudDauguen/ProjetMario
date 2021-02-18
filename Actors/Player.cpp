@@ -4,29 +4,25 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Window/Keyboard.hpp>
 
-#include "Game.h"
-#include "World.h"
-#include "Collider.h"
-#include "Enemy.h"
+#include "../Game.h"
+#include "../World.h"
+#include "../Collider.h"
+#include "../Enemy.h"
 
-Player::Player(Game* game, sf::Vector2f startingPosition, sf::Vector2f scale, float mass, sf::Vector2f speed)
+Player::Player(Game* game, sf::Vector2f startingPosition, int textureIndex, sf::Vector2f scale, float mass, sf::Vector2f speed)
 {
     this->m_game = game;
-    if (!this->m_texture.loadFromFile("Textures/terrain.png", sf::IntRect(0 + 16 * 11, 0 + 16 * 8, 16, 16)))
-	    std::cout << "Issue with loading the player texture" << std::endl;
-
+    this->m_texture = *this->m_game->getTexture(textureIndex);
 	this->m_sprite = sf::Sprite(this->m_texture);
 	this->m_sprite.setPosition(startingPosition);
 	this->m_sprite.scale(scale);
     this->m_mass = mass;
     this->m_speed = speed;
 }
-Player::Player(Game* game, sf::Vector2f startingPosition, sf::Vector2f scale)
+Player::Player(Game* game, sf::Vector2f startingPosition, int textureIndex, sf::Vector2f scale)
 {
     this->m_game = game;
-    if (!this->m_texture.loadFromFile("Textures/terrain.png", sf::IntRect(0 + 16 * 11, 0 + 16 * 8, 16, 16)))
-	    std::cout << "Issue with loading the player texture" << std::endl;
-
+    this->m_texture = *this->m_game->getTexture(textureIndex);
 	this->m_sprite = sf::Sprite(this->m_texture);
 	this->m_sprite.setPosition(startingPosition);
 	this->m_sprite.scale(scale);
@@ -36,9 +32,7 @@ Player::Player(Game* game, sf::Vector2f startingPosition, sf::Vector2f scale)
 Player::Player(Game* game, sf::Vector2f startingPosition)
 {
     this->m_game = game;
-    if (!this->m_texture.loadFromFile("Textures/terrain.png", sf::IntRect(0 + 16 * 11, 0 + 16 * 8, 16, 16)))
-	    std::cout << "Issue with loading the player texture" << std::endl;
-
+    this->m_texture = *this->m_game->getTexture(139);
 	this->m_sprite = sf::Sprite(this->m_texture);
 	this->m_sprite.setPosition(startingPosition);
 	this->m_sprite.scale(1.75f, 1.75f);

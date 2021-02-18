@@ -7,10 +7,10 @@
 
 #include "Actor.h"
 #include "World.h"
-#include "Player.h"
 #include "SaveReader.h"
-#include "Enemies/EGoomba.h"
-#include "Enemies/EThwomp.h"
+#include "Actors/Player.h"
+#include "Actors/EGoomba.h"
+#include "Actors/EThwomp.h"
 
 Game::Game(sf::RenderWindow& window) : m_window(window)
 {
@@ -18,8 +18,14 @@ Game::Game(sf::RenderWindow& window) : m_window(window)
 		{ 0.f,0.f },
 		{ (float)window.getSize().x, (float)window.getSize().y }
 	);
+
+	// Textures
+	this->m_blocTextures.loadFromFile("Textures/terrain.png");
+	this->m_blocTextures.createMaskFromColor(sf::Color(255, 255, 255)); // Treat White as transparent
+	this->m_blocTextures.createMaskFromColor(sf::Color(214, 127, 255)); // Treat Purple as transparent
+	this->loadAllTextures();
 	
-	auto player = new Player(this, {640, 120}); // world need player
+	auto player = new Player(this, {640, 120}); // world need player to be initialized
 	this->m_world = new World(this, 50, 30, this->m_blocScale);
 
 	this->m_player = std::make_shared<Player>(*player);
@@ -66,11 +72,6 @@ void Game::update(int deltaTime)
 	{
 		obj->update(deltaTime);
 	}
-	
-	/*for (const auto& enemy : this->m_enemies)
-	{
-		enemy->update(deltaTime);
-	}*/
 }
 
 void Game::draw(int deltaTime)
@@ -86,10 +87,23 @@ void Game::draw(int deltaTime)
 	{
 		obj->draw(this->m_window);
 	}
-
-	/*for (const auto& enemy : this->m_enemies)
-	{
-		enemy->draw(this->m_window);
-	}*/
 }
+
+bool Game::loadTextureFromBlocIndex(sf::Texture* texture, int blocIndex)
+{
+	return texture->loadFromImage(this->m_blocTextures, sf::IntRect(16 * (blocIndex % 16), 16 * (int)floor(blocIndex / 16), 16, 16));
+}
+
+void Game::loadAllTextures()
+{
+	for (int y = 0; y < float((this->m_blockTextureLength - 1) / 16); ++y)
+	{
+		for (int x = 0; x < 16; ++x)
+		{
+			if (!this->loadTextureFromBlocIndex(&this->m_blockTextures[y * 16 + x], y * 16 + x))
+				std::cout << "Issue with loading the m_world texture " << y * 16 + x << std::endl;
+		}
+	}
+}
+
 

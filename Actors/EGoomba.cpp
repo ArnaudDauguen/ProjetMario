@@ -3,14 +3,13 @@
 #include <iostream>
 
 #include "../Collider.h"
+#include "../World.h"
 #include "../Game.h"
 
 EGoomba::EGoomba(Game* game, sf::Vector2f startingPosition, int textureIndex, sf::Vector2f scale, float mass, sf::Vector2f speed)
 {
 	this->m_game = game;
-	if (!this->m_texture.loadFromFile("Textures/terrain.png", sf::IntRect(16 * (textureIndex%16), 16 * (int)floor(textureIndex / 16), 16, 16)))
-		std::cout << "Issue with loading the Goombat texture" << std::endl;
-	//TODO to avoid blanck bounds, use a sf::Image and Image.CreateMaskFromColor(sf::Color(0, 255, 0, 255), 0)
+	this->m_texture = *this->m_game->getTexture(textureIndex);
 	this->m_sprite = sf::Sprite(this->m_texture);
 	this->m_sprite.setPosition(startingPosition);
 	this->m_sprite.scale(scale);
@@ -20,9 +19,7 @@ EGoomba::EGoomba(Game* game, sf::Vector2f startingPosition, int textureIndex, sf
 EGoomba::EGoomba(Game* game, sf::Vector2f startingPosition, int textureIndex, sf::Vector2f scale)
 {
 	this->m_game = game;
-	if (!this->m_texture.loadFromFile("Textures/terrain.png", sf::IntRect(16 * (textureIndex%16), 16 * (int)floor(textureIndex / 16), 16, 16)))
-		std::cout << "Issue with loading the Goombat texture" << std::endl;
-	//TODO to avoid blanck bounds, use a sf::Image and Image.CreateMaskFromColor(sf::Color(0, 255, 0, 255), 0)
+	this->m_texture = *this->m_game->getTexture(textureIndex);
 	this->m_sprite = sf::Sprite(this->m_texture);
 	this->m_sprite.setPosition(startingPosition);
 	this->m_sprite.scale(scale);
@@ -32,9 +29,7 @@ EGoomba::EGoomba(Game* game, sf::Vector2f startingPosition, int textureIndex, sf
 EGoomba::EGoomba(Game* game, sf::Vector2f startingPosition, int textureIndex)
 {
 	this->m_game = game;
-	if (!this->m_texture.loadFromFile("Textures/terrain.png", sf::IntRect(16 * (textureIndex%16), 16 * (int)floor(textureIndex / 16), 16, 16)))
-		std::cout << "Issue with loading the Goombat texture" << std::endl;
-	//TODO to avoid blanck bounds, use a sf::Image and Image.CreateMaskFromColor(sf::Color(0, 255, 0, 255), 0)
+	this->m_texture = *this->m_game->getTexture(textureIndex);
 	this->m_sprite = sf::Sprite(this->m_texture);
 	this->m_sprite.setPosition(startingPosition);
 	this->m_sprite.scale(1.75f, 1.75f);

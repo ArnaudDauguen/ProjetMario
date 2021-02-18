@@ -8,14 +8,14 @@
 
 #include "Enemy.h"
 #include "Game.h"
-#include "Player.h"
+#include "Actors/Player.h"
 
 
 World::World(Game* game, int width, int height, float blockScale) : m_game(game)
 {	
     this->m_blockScale = blockScale;
     this->m_size = sf::Vector2i(width, height);
-    this->loadTextures();
+    this->loadAllTextures();
 	
     this->m_blocks = new int* [width];
     for (int i = 0; i < width; ++i)
@@ -51,28 +51,36 @@ World::World(Game* game, int width, int height, float blockScale) : m_game(game)
 
 void World::Translate(sf::Vector2f distance)
 {
+	// Move world
     this->m_position.x += distance.x;
     this->m_position.y += distance.y;
 
+	// Move all enemies
     for (const auto& enemy : this->m_game->m_enemies)
     {
         enemy->forceMove(distance);
+    }
+
+	// Update backgrounds
+    float bgX = 0.f;
+    for (int i = 0; i < m_backgroundLenght; ++i)
+    {
+        bgX = this->GetPosition().x - (1.2f - 0.3f * i) * (this->GetPosition().x / this->GetSize().x * 16 * this->m_game->m_blocScale);
+        this->m_backgrounds[i].setPosition(bgX, this->GetPosition().y);
     }
 }
 
 
 void World::draw(sf::RenderWindow& window)
 {
+	// Draw backgrounds
     float bgX = 0.f;
-	for (int i = 0; i < 3; ++i)
-	{
-        bgX = this->GetPosition().x - (1.2f - 0.3f * i) * (this->GetPosition().x / this->GetSize().x * 16 * this->m_game->m_blocScale);
-
-        this->m_backgrounds[i].setTexture(this->m_backgroundTextures[i]);
-		this->m_backgrounds[i].setPosition(bgX, this->GetPosition().y);
+	for (int i = 0; i < m_backgroundLenght; ++i)
+    {
         window.draw(m_backgrounds[i]);
 	}
 
+	// Draw world blocks
     const sf::Vector2i topLeftBlock = this->PositionOnScreenToMapBlockIndex({ 0.f, 0.f });
 	const sf::Vector2i bottomRightBlock = this->PositionOnScreenToMapBlockIndex({ (float)this->m_game->GetScreenSize().x, (float)this->m_game->GetScreenSize().y });
 	
@@ -82,7 +90,7 @@ void World::draw(sf::RenderWindow& window)
             if (this->m_blocks[x][y] == -1) continue;
 
             //blockSprite.setTexture(this->m_blocks[j][i] == 1 ? m_dirt_texture : m_stone_texture);
-            m_drawingBlockSprite.setTexture(this->m_blockTextures[this->m_blocks[x][y]]);
+            m_drawingBlockSprite.setTexture(*this->m_game->getTexture(this->m_blocks[x][y]));
 
             m_drawingBlockSprite.setPosition(x * (16 * this->m_game->m_blocScale) + this->GetPosition().x, y * (16 * this->m_game->m_blocScale) + this->GetPosition().y);
 
@@ -91,22 +99,15 @@ void World::draw(sf::RenderWindow& window)
     }
 }
 
-void World::loadTextures()
-{
-	for (int y = 0; y < float((this->m_blockTextureCount -1)/16); ++y)
-	{
-		for (int x = 0; x < 16; ++x)
-		{
-            if (!this->m_blockTextures[y * 16 + x].loadFromFile("Textures/terrain.png", sf::IntRect(0 + 16 * x, 0 + 16 * y, 16, 16)))
-                std::cout << "Issue with loading the m_world texture " << y*16 + x << std::endl;
-		}
-	}
 
-    for (int i = 0; i < 3; ++i)
+void World::loadAllTextures()
+{
+    for (int i = 0; i < this->m_backgroundLenght; ++i)
     {
         std::string filePath = "Textures/Backgrounds/layer_0" + std::to_string(i + 1) + ".png";
         if (!this->m_backgroundTextures[i].loadFromFile(filePath))
             std::cout << "Issue with loading the background texture '" + filePath + "'" << std::endl;
+        this->m_backgrounds[i].setTexture(this->m_backgroundTextures[i]);
     }
 }
 

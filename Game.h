@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/Texture.hpp>
 
 class World;
 class Player;
@@ -23,6 +24,9 @@ public:
 	
 	sf::Vector2u GetScreenSize() const { return m_window.getSize(); }
 	
+	bool loadTextureFromBlocIndex(sf::Texture* texture, int blocIndex);
+	sf::Texture* getTexture(int textureIndex) { return textureIndex < this->m_blockTextureLength ? &this->m_blockTextures[textureIndex] : nullptr; }
+	
 	const float m_blocScale = 2.f;
 	float m_gravityStrength = 0.6f;
 	sf::FloatRect m_screen;
@@ -30,5 +34,11 @@ private:
 	sf::RenderWindow& m_window;
 	std::vector<std::shared_ptr<IUpdatableObject>> m_updatableObjects = std::vector<std::shared_ptr<IUpdatableObject>>();
 	std::vector<std::shared_ptr<IDrawableObject>> m_drawableObjects = std::vector<std::shared_ptr<IDrawableObject>>();
+	
+	sf::Image m_blocTextures;
+	const int m_blockTextureLength = 256;
+	sf::Texture m_blockTextures[256];
+
+	void loadAllTextures();
 };
 

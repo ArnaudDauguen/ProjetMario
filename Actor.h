@@ -21,15 +21,16 @@ public:
 	}
 	
 	void update(int deltaTime) override { this->applyGravity(deltaTime); };
-	void draw(sf::RenderWindow& window) override { window.draw(this->m_sprite); };
-	bool mustDie() override { return isDead; }
+	void draw(sf::RenderWindow& window) override;
+	bool mustDie() override { return m_isDead; }
 
 	virtual bool isColliding(sf::FloatRect* globalBoundToTest);
 	virtual bool isColliderInKillZone(sf::FloatRect* globalBoundToTest);
 	virtual void calculateDeathCollisionBox();
 
 	void forceMove(sf::Vector2f distance);
-	void mustDie(bool mustDie, Actor* killer) { this->isDead = mustDie; }
+	void mustDie(bool mustDie, Actor* killer) { this->m_isDead = mustDie; }
+	bool isDead() const { return this->m_isDead; }
 
 protected:
 	Game* m_game;
@@ -38,8 +39,9 @@ protected:
 
 	sf::Vector2f m_speed;
 	float m_mass;
-	bool isDead = false;
+	bool m_isDead = false;
 
+	sf::Vector2f calculateMovementVector(sf::Vector2f path, bool* isTouchingVictoryBlock);
 	sf::Vector2f calculateMovementVector(sf::Vector2f path);
 
 	virtual sf::Vector2f move(sf::Vector2f path);

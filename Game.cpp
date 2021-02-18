@@ -7,38 +7,64 @@
 
 #include "Actor.h"
 #include "World.h"
-#include "Player.h"
 #include "SaveReader.h"
-#include "Enemies/EGoomba.h"
-#include "Enemies/EThwomp.h"
+#include "Actors/Player.h"
+#include "Actors/EGoomba.h"
+#include "Actors/EThwomp.h"
 
 Game::Game(sf::RenderWindow& window) : m_window(window)
 {
-	auto player = new Player(this, {640, 120}); // world need player
-	this->m_world = new World(this, 50, 30, this->m_blocScale);
-
-	this->m_player = std::make_shared<Player>(*player);
+	this->m_screen = sf::FloatRect(
+		{ 0.f,0.f },
+		{ (float)window.getSize().x, (float)window.getSize().y }
+	);
 	
-	this->m_updatableObjects.push_back(this->m_player);
-	this->m_drawableObjects.push_back(this->m_player);
+	this->loadAllTextures();
 
-	// Spawn Goomba
-	sf::Vector2f speeds[] = { {0.15f, 0.f}, {-0.15f, 0.f} };
-	for(int i = 0; i < 2; i++)
+	Player* player = nullptr;
+
+	this->m_world = new World(this, this->m_blocScale);
+
+	// Load actors
+	auto actors = SaveReader::GetActorsData();
+	for (const auto& actor : actors.actors)
 	{
-		auto goomba = new EGoomba(this, {900, 300}, 70, {1.75f, 1.75f}, 0.5f, speeds[i]);
-		auto gb = std::make_shared<EGoomba>(*goomba);
-		this->m_enemies.push_back(gb);
-		this->m_updatableObjects.push_back(gb);
-		this->m_drawableObjects.push_back(gb);
+		switch (actor.type)
+		{
+		case 0:
+			{
+				player = new Player(this, { actor.spawnX, actor.spawnY });
+				this->m_player = std::make_shared<Player>(*player);
+				this->m_updatableObjects.push_back(this->m_player);
+				this->m_drawableObjects.push_back(this->m_player);
+				break;
+			}
+		case 1:
+			{
+				const auto goomba = new EGoomba(this, { actor.spawnX, actor.spawnY }, actor.textureLocationId, { 1.75f, 1.75f });
+				auto gb = std::make_shared<EGoomba>(*goomba);
+				this->m_enemies.push_back(gb);
+				this->m_updatableObjects.push_back(gb);
+				this->m_drawableObjects.push_back(gb);
+				break;
+			}
+		case 2:
+			{
+				const auto thwomp = new EThwomp(this, { actor.spawnX, actor.spawnY }, actor.textureLocationId, { 3.75, 5.75 });
+				auto gb = std::make_shared<EThwomp>(*thwomp);
+				this->m_enemies.push_back(gb);
+				this->m_updatableObjects.push_back(gb);
+				this->m_drawableObjects.push_back(gb);
+				break;
+			}
+		}
 	}
 
-	// Spawn Thwomp
-	auto thwomp = new EThwomp(this, { 1100, 100 }, 46, {3.75, 5.75});
-	auto gb = std::make_shared<EThwomp>(*thwomp);
-	this->m_enemies.push_back(gb);
-	this->m_updatableObjects.push_back(gb);
-	this->m_drawableObjects.push_back(gb);
+	if (player == nullptr)
+	{
+		Messager::ShowMessageAndExit("You have to declare a player in file actors.json.");
+		return;
+	}
 }
 
 void Game::handleInputs(int deltaTime, sf::Event* event)
@@ -61,11 +87,6 @@ void Game::update(int deltaTime)
 	{
 		obj->update(deltaTime);
 	}
-	
-	/*for (const auto& enemy : this->m_enemies)
-	{
-		enemy->update(deltaTime);
-	}*/
 }
 
 void Game::draw(int deltaTime)
@@ -81,10 +102,23 @@ void Game::draw(int deltaTime)
 	{
 		obj->draw(this->m_window);
 	}
-
-	/*for (const auto& enemy : this->m_enemies)
-	{
-		enemy->draw(this->m_window);
-	}*/
 }
+
+void Game::loadAllTextures()
+{
+	sf::Image terainPNG;
+	terainPNG.loadFromFile("Textures/terrain.png");
+	terainPNG.createMaskFromColor(sf::Color(255, 255, 255)); // Treat White as transparent
+	terainPNG.createMaskFromColor(sf::Color(214, 127, 255)); // Treat Purple as transparent
+	
+	for (int y = 0; y < this->m_yTextureLength; ++y)
+	{
+		for (int x = 0; x < this->m_xTextureLength; ++x)
+		{
+			if (!this->m_blockTextures[y * this->m_yTextureLength + x].loadFromImage(terainPNG, sf::IntRect(m_textureSizeOnImage * x, m_textureSizeOnImage * y, 16, 16)))
+				std::cout << "Issue with loading the m_world texture " << y * 16 + x << std::endl;
+		}
+	}
+}
+
 

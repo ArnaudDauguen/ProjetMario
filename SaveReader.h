@@ -5,6 +5,7 @@
 
 
 #include "BlocksData.h"
+#include "ActorsData.h"
 #include "LevelData.h"
 #include "Messager.h"
 
@@ -21,6 +22,16 @@ inline void from_json(const json& j, BlockData& block_data)
 {
 	j.at("id").get_to(block_data.id);
 	j.at("textureLocationId").get_to(block_data.textureLocationId);
+	j.at("ignoreCollisions").get_to(block_data.ignoreCollisions);
+	j.at("isVictoryBlock").get_to(block_data.isVictoryBlock);
+}
+
+inline void from_json(const json& j, ActorData& actor_data)
+{
+	j.at("type").get_to(actor_data.type);
+	j.at("spawnX").get_to(actor_data.spawnX);
+	j.at("spawnY").get_to(actor_data.spawnY);
+	j.at("textureLocationId").get_to(actor_data.textureLocationId);
 }
 
 inline void from_json(const json& j, BlocksData& blocks_data)
@@ -28,6 +39,13 @@ inline void from_json(const json& j, BlocksData& blocks_data)
 	const json& blocks = j.at("blocks");
 	blocks_data.blocks.resize(blocks.size());
 	std::copy(blocks.begin(), blocks.end(), blocks_data.blocks.begin());
+}
+
+inline void from_json(const json& j, ActorsData& actors_data)
+{
+	const json& actors = j.at("actors");
+	actors_data.actors.resize(actors.size());
+	std::copy(actors.begin(), actors.end(), actors_data.actors.begin());
 }
 
 class SaveReader
@@ -44,6 +62,13 @@ public:
 	{
 		return BlocksData(internalGetData(".\\save\\blocks.json"));
 	}
+
+
+	static ActorsData GetActorsData()
+	{
+		return ActorsData(internalGetData(".\\save\\actors.json"));
+	}
+
 private:
 	static json internalGetData(const std::string& path)
 	{

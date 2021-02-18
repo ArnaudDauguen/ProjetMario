@@ -7,6 +7,13 @@
 #include "World.h"
 #include "Game.h"
 
+void Actor::draw(sf::RenderWindow& window)
+{
+	if(this->m_game->m_screen.intersects(this->m_sprite.getGlobalBounds()))
+		window.draw(this->m_sprite);
+}
+
+
 sf::Vector2f Actor::applyGravity(int deltaTime) // This module is completely separate from the rest of movement methods
 {
     if (this->m_mass == 0)
@@ -23,6 +30,13 @@ sf::Vector2f Actor::applyGravity(int deltaTime) // This module is completely sep
 
 sf::Vector2f Actor::calculateMovementVector(sf::Vector2f path)
 {
+    bool uselessTmp;
+    return this->calculateMovementVector(path, &uselessTmp);
+}
+
+
+sf::Vector2f Actor::calculateMovementVector(sf::Vector2f path, bool* isTouchingVictoryBlock)
+{
     // CALCULATE MOVEMENT
     // Get collision data
     const int numberOfPointsPerBound = 1 + (int)floor(std::max(this->GetCharacterSize().x / this->m_game->m_world->getBlockSize(), this->GetCharacterSize().y / this->m_game->m_world->getBlockSize()));
@@ -37,7 +51,7 @@ sf::Vector2f Actor::calculateMovementVector(sf::Vector2f path)
 
     // Calculate travelable distance
     return Collider::calculateTravelableDistance(this, this->m_game->m_world, &numberOfStep, path,
-        &blockOnPath);
+        &blockOnPath, isTouchingVictoryBlock);
 }
 
 sf::Vector2f Actor::move(sf::Vector2f path)

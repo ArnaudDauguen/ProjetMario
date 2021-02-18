@@ -5,15 +5,13 @@
 
 
 #include "../Game.h"
-#include "../Player.h"
+#include "Player.h"
 #include "../World.h"
 
 EThwomp::EThwomp(Game* game, sf::Vector2f startingPosition, int textureIndex, sf::Vector2f scale, float mass, float playerDetectionXRange, float timeOnGround, float ascendSpeed)
 {
 	this->m_game = game;
-	if (!this->m_texture.loadFromFile("Textures/terrain.png", sf::IntRect(16 * (textureIndex%16), 16 * (int)floor(textureIndex / 16), 16, 16)))
-		std::cout << "Issue with loading the Thwomp texture" << std::endl;
-	//TODO to avoid blanck bounds, use a sf::Image and Image.CreateMaskFromColor(sf::Color(0, 255, 0, 255), 0)
+	this->m_texture = *this->m_game->getTexture(textureIndex);
 	this->m_sprite = sf::Sprite(this->m_texture);
 	this->m_sprite.setPosition(startingPosition);
 	this->m_sprite.scale(scale);
@@ -23,36 +21,6 @@ EThwomp::EThwomp(Game* game, sf::Vector2f startingPosition, int textureIndex, sf
 	this->playerDetectionXRange = playerDetectionXRange;
 	this->timeOnGround = timeOnGround;
 	this->ascendSpeed = ascendSpeed;
-	this->startPosition = startingPosition;
-	this->buildAgroArea();
-}
-EThwomp::EThwomp(Game* game, sf::Vector2f startingPosition, int textureIndex, sf::Vector2f scale)
-{
-	this->m_game = game;
-	if (!this->m_texture.loadFromFile("Textures/terrain.png", sf::IntRect(16 * (textureIndex%16), 16 * (int)floor(textureIndex / 16), 16, 16)))
-		std::cout << "Issue with loading the Thwomp texture" << std::endl;
-	//TODO to avoid blanck bounds, use a sf::Image and Image.CreateMaskFromColor(sf::Color(0, 255, 0, 255), 0)
-	this->m_sprite = sf::Sprite(this->m_texture);
-	this->m_sprite.setPosition(startingPosition);
-	this->m_sprite.scale(scale);
-	this->m_mass = 2.f;
-	this->m_speed = {0, 0};
-
-	this->startPosition = startingPosition;
-	this->buildAgroArea();
-}
-EThwomp::EThwomp(Game* game, sf::Vector2f startingPosition, int textureIndex)
-{
-	this->m_game = game;
-	if (!this->m_texture.loadFromFile("Textures/terrain.png", sf::IntRect(16 * (textureIndex%16), 16 * (int)floor(textureIndex / 16), 16, 16)))
-		std::cout << "Issue with loading the Thwomp texture" << std::endl;
-	//TODO to avoid blanck bounds, use a sf::Image and Image.CreateMaskFromColor(sf::Color(0, 255, 0, 255), 0)
-	this->m_sprite = sf::Sprite(this->m_texture);
-	this->m_sprite.setPosition(startingPosition);
-	this->m_sprite.scale(3.75f, 5.75f);
-	this->m_mass = 2.f;
-	this->m_speed = {0, 0};
-
 	this->startPosition = startingPosition;
 	this->buildAgroArea();
 }

@@ -5,6 +5,8 @@ struct BlockData
 {
 	int id;
 	int textureLocationId;
+	bool ignoreCollisions;
+	bool isVictoryBlock;
 };
 
 struct BlocksData

@@ -4,6 +4,8 @@
 #include "Game.h"
 #include "GameState.h"
 #include "Menu/MenuMain.h"
+#include "World.h"
+#include "Actors/Player.h"
 
 int main()
 {
@@ -14,9 +16,7 @@ int main()
     MenuMain menu(window, &gameState);
 	
 	
-    window.setFramerateLimit(60);
-	
-    while (window.isOpen())
+    while (window.isOpen() && !game.m_world->isLevelComplete() && !game.m_player->isDead())
     {
         sf::Event event;
         while (window.pollEvent(event))

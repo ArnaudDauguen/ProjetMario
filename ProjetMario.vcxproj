@@ -136,12 +136,13 @@ xcopy /y /d  "$(ProjectDir)SFML-2.5.1\bin\sfml-window-2.dll" "$(OutDir)"</Comman
     <ClCompile Include="Menu\ButtonStart.cpp" />
     <ClCompile Include="Menu\Button.cpp" />
     <ClCompile Include="Collider.cpp" />
-    <ClCompile Include="Enemies\EGoomba.cpp" />
-    <ClCompile Include="Enemies\EThwomp.cpp" />
+    <ClCompile Include="Actors\EGoomba.cpp" />
+    <ClCompile Include="Actors\EThwomp.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Actors\Player.cpp" />
     <ClCompile Include="Menu\Menu.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="World.cpp" />
@@ -154,8 +155,9 @@ xcopy /y /d  "$(ProjectDir)SFML-2.5.1\bin\sfml-window-2.dll" "$(OutDir)"</Comman
     <ClInclude Include="Menu\ButtonStart.h" />
     <ClInclude Include="Menu\Button.h" />
     <ClInclude Include="Collider.h" />
-    <ClInclude Include="Enemies\EGoomba.h" />
-    <ClInclude Include="Enemies\EThwomp.h" />
+    <ClInclude Include="Actors\EGoomba.h" />
+    <ClInclude Include="Actors\EThwomp.h" />
+    <ClInclude Include="ActorsData.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameState.h" />
@@ -164,6 +166,7 @@ xcopy /y /d  "$(ProjectDir)SFML-2.5.1\bin\sfml-window-2.dll" "$(OutDir)"</Comman
     <ClInclude Include="LevelData.h" />
     <ClInclude Include="Menu\Menu.h" />
     <ClInclude Include="Messager.h" />
+    <ClInclude Include="Actors\Player.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SaveReader.h" />

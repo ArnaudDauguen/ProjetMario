@@ -1,16 +1,35 @@
 {
 	"blocks": [
 		{
+			"id": -1,
+			"textureLocationId": -1,
+			"ignoreCollisions": true,
+			"isVictoryBlock": false
+		},
+		{
 			"id": 1,
-			"textureLocationId": 1
+			"textureLocationId": 1,
+			"ignoreCollisions": false,
+			"isVictoryBlock": false
 		},
 		{
 			"id": 2,
-			"textureLocationId": 2
+			"textureLocationId": 2,
+			"ignoreCollisions": false,
+			"isVictoryBlock": false
 		},
 		{
 			"id": 3,
-			"textureLocationId": 3
+			"textureLocationId": 3,
+			"ignoreCollisions": false,
+			"isVictoryBlock": false
+		}, 
+		{
+		
+			"id": 4,
+			"textureLocationId": 148,
+			"ignoreCollisions": true,
+			"isVictoryBlock": true
 		}
 	]
 }

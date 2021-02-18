@@ -2,15 +2,19 @@
 #include <SFML/Graphics.hpp>
 
 #include "Game.h"
-
+#include "GameState.h"
+#include "Menu/MenuMain.h"
 
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(1280, 720), "Projet Mario");
     sf::Clock clock;
     Game game(window);
+    auto gameState = GameState::MENU;
+    MenuMain menu(window, &gameState);
 	
-    window.setFramerateLimit(144);
+	
+    window.setFramerateLimit(60);
 	
     while (window.isOpen())
     {
@@ -19,6 +23,8 @@ int main()
         {
             if (event.type == sf::Event::Closed)
                 window.close();
+
+            menu.handleInputs(&event);
         	//player jump
             /*if (event.type == sf::Event::KeyReleased)
                 if (event.key.code == sf::Keyboard::Up)
@@ -31,11 +37,20 @@ int main()
 
         int deltaTime = elapsed.asMilliseconds();
 
-        game.handleInputs(deltaTime, &event);
-    	
-        game.update(deltaTime);
-    	
-        game.draw(deltaTime);
+        switch (gameState)
+        {
+	        case GameState::GAME:
+	            game.handleInputs(deltaTime, &event);
+	            game.update(deltaTime);
+	            game.draw(deltaTime);
+	            break;
+	        case GameState::MENU:
+	            menu.update(deltaTime);
+	            menu.draw(deltaTime);
+	            break;
+            case GameState::QUIT:
+                return 0;
+        }
     	
         window.display();
     }

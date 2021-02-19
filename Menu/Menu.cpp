@@ -1,6 +1,6 @@
 #include "Menu.h"
 
-Menu::Menu(sf::RenderWindow& window, GameState* state): m_gameState(state), m_window(window), m_selectedButton(0), m_font(std::make_shared<sf::Font>(sf::Font()))
+Menu::Menu(WindowContext& context): m_context(context), m_selectedButton(0), m_font(std::make_shared<sf::Font>(sf::Font()))
 {
 	if (!m_font->loadFromFile("Textures/PIXEAB__.TTF"))
 		std::cout << "cannot load font" << std::endl;
@@ -19,7 +19,7 @@ void Menu::handleInputs(sf::Event* event)
 			break;
 		case sf::Keyboard::Enter:
 		case sf::Keyboard::Space:
-			m_buttons.at(m_selectedButton)->Click(m_gameState);
+			m_buttons.at(m_selectedButton)->Click(m_context);
 			break;
 		default:
 			break;
@@ -37,13 +37,13 @@ void Menu::handleInputs(sf::Event* event)
 
 	if (event->type == sf::Event::MouseButtonPressed)
 	{
-		const auto mousePosition = sf::Mouse::getPosition(m_window);
+		const auto mousePosition = sf::Mouse::getPosition(m_context.window);
 
 		switch (event->mouseButton.button)
 		{
 		case sf::Mouse::Left:
 			if (m_buttons[m_selectedButton]->GetBox().getGlobalBounds().contains({ static_cast<float>(mousePosition.x), static_cast<float>(mousePosition.y) }))
-				m_buttons.at(m_selectedButton)->Click(m_gameState);
+				m_buttons.at(m_selectedButton)->Click(m_context);
 			break;
 		default:
 			break;
@@ -63,12 +63,12 @@ void Menu::draw(int deltaTime)
 {
 	for (const auto& button : m_buttons)
 	{
-		m_window.draw(button->GetBox());
-		m_window.draw(button->GetText());
+		m_context.window.draw(button->GetBox());
+		m_context.window.draw(button->GetText());
 	}
 
 	for (const auto& text : m_texts)
 	{
-		m_window.draw(*text);
+		m_context.window.draw(*text);
 	}
 }

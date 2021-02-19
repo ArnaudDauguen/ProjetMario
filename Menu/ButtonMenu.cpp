@@ -5,7 +5,7 @@ ButtonMenu::ButtonMenu(const std::string& text, sf::Vector2f position, std::shar
 {
 }
 
-void ButtonMenu::Click(GameState* state)
+void ButtonMenu::Click(WindowContext& context)
 {
-	*state = GameState::MENU;
+	context.state = GameState::MENU;
 }

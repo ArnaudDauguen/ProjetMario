@@ -4,6 +4,7 @@
 #include <SFML/Graphics/Text.hpp>
 
 #include "../GameState.h"
+#include "../WindowContext.h"
 
 class Button
 {
@@ -25,7 +26,7 @@ public:
 	Button(const std::string& text, sf::Vector2f position, std::shared_ptr<sf::Font> font);
 	virtual ~Button() = default;
 
-	virtual void Click(GameState* state) = 0;
+	virtual void Click(WindowContext& context) = 0;
 	void SetHovered(const bool hovered);
 
 	sf::RectangleShape GetBox() const { return m_box; }

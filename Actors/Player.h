@@ -25,6 +25,8 @@ public:
 	bool isGoingBelowTheWorld();
 
 	sf::FloatRect getHitBox() const { return this->m_sprite.getGlobalBounds(); }
+
+	sf::Keyboard::Key m_lastDirectionInput;
 	
 protected:
 	float m_jumpStrength = 3.f;

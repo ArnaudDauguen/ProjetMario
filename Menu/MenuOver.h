@@ -3,6 +3,6 @@
 class MenuOver : public Menu
 {
 public:
-	MenuOver(sf::RenderWindow& window, GameState* state);
+	MenuOver(WindowContext& context);
 };
 

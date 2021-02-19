@@ -10,6 +10,6 @@ class ButtonMenu : public Button
 public:
 	ButtonMenu(const std::string& text, sf::Vector2f position, std::shared_ptr<sf::Font> font);
 
-	void Click(GameState* state) override;
+	void Click(WindowContext& context) override;
 };
 

@@ -4,7 +4,7 @@ ButtonStart::ButtonStart(const std::string& text, sf::Vector2f position, std::sh
 {
 }
 
-void ButtonStart::Click(GameState* state)
+void ButtonStart::Click(WindowContext& context)
 {
-	*state = GameState::GAME;
+	context.state = GameState::GAME;
 }

@@ -1,29 +1,88 @@
 {
-	"actors":
-		[
-			{
-				"type": 0,
-				"spawnX": 0.0,
-				"spawnY": 100.0,
-				"textureLocationId": 139
-			},
-			{
-				"type": 1,
-				"spawnX": 300.0,
-				"spawnY": 600.0,
-				"textureLocationId": 70
-			},
-			{
-				"type": 1,
-				"spawnX": 900.0,
-				"spawnY": 200.0,
-				"textureLocationId": 70
-			},
-			{
-				"type": 2,
-				"spawnX": 2530.0,
-				"spawnY": 416.0,
-				"textureLocationId": 46
-			}
-		]
+	"actors": [
+		{
+			"type": 0,
+			"spawnX": 0.0,
+			"spawnY": 100.0,
+			"textureLocationId": 139
+		},
+		{
+			"type": 1,
+			"spawnX": 350.0,
+			"spawnY": 240.0,
+			"textureLocationId": 70
+		},
+		{
+			"type": 1,
+			"spawnX": 330.0,
+			"spawnY": 700.0,
+			"textureLocationId": 70
+		},
+		{
+			"type": 1,
+			"spawnX": 1030.0,
+			"spawnY": 600.0,
+			"textureLocationId": 70
+		},
+		{
+			"type": 1,
+			"spawnX": 780.0,
+			"spawnY": 250.0,
+			"textureLocationId": 70
+		},
+		{
+			"type": 1,
+			"spawnX": 1075.0,
+			"spawnY": 250.0,
+			"textureLocationId": 70
+		},
+		{
+			"type": 1,
+			"spawnX": 2000.0,
+			"spawnY": 320.0,
+			"textureLocationId": 70
+		},
+		{
+			"type": 1,
+			"spawnX": 2600.0,
+			"spawnY": 250.0,
+			"textureLocationId": 70
+		},
+		{
+			"type": 1,
+			"spawnX": 2750.0,
+			"spawnY": 250.0,
+			"textureLocationId": 70
+		},
+		{
+			"type": 1,
+			"spawnX": 3000.0,
+			"spawnY": 250.0,
+			"textureLocationId": 70
+		},
+		{
+			"type": 1,
+			"spawnX": 2700.0,
+			"spawnY": 480.0,
+			"textureLocationId": 70
+		},
+		{
+			"type": 1,
+			"spawnX": 1950.0,
+			"spawnY": 830.0,
+			"textureLocationId": 70
+		},
+		{
+			"type": 1,
+			"spawnX": 2340.0,
+			"spawnY": 770.0,
+			"textureLocationId": 70
+		},
+		{
+			"type": 2,
+			"spawnX": 2530.0,
+			"spawnY": 416.0,
+			"textureLocationId": 46
+		}
+	]
 }

@@ -104,5 +104,6 @@ bool Collider::isGoingOverAHole(const World* world, sf::Vector2f startPosition, 
         return true;
     if (targetBlock.x < 0 || targetBlock.x > world->GetSize().x - 1 || targetBlock.y < 0) // out of map, left, top or right, ignore
         return false;
-    return world->GetBlockId(targetBlock) == -1;
+    const BlockData block = world->GetBlock(targetBlock.x, targetBlock.y);
+    return block.ignoreCollisions;
 }

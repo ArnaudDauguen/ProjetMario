@@ -4,12 +4,12 @@
 #include <SFML/Window/Event.hpp>
 
 #include "Button.h"
+#include "../WindowContext.h"
 
 class Menu
 {
 protected:
-	GameState* m_gameState;
-	sf::RenderWindow& m_window;
+	WindowContext& m_context;
 	unsigned int m_selectedButton;
 	
 public:
@@ -17,7 +17,7 @@ public:
 	std::vector<sf::Text*> m_texts;
 	std::shared_ptr<sf::Font> m_font;
 
-	Menu(sf::RenderWindow& window, GameState* state);
+	Menu(WindowContext& context);
 	~Menu() = default;
 
 	void handleInputs(sf::Event* event);

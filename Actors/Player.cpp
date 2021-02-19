@@ -36,12 +36,14 @@ void Player::handleInputs(int deltaTime, sf::Event* event)
     float deltatime = float(deltaTime);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
     {
+        m_lastDirectionInput = sf::Keyboard::Left;
         const float distance = -1.f * deltatime * this->m_speed.x;
         this->move({ distance, 0 });
     }
 	
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
     {
+        m_lastDirectionInput = sf::Keyboard::Right;
         const float distance = 1.f * deltatime * this->m_speed.x;
         this->move({ distance, 0 });
     }

@@ -14,8 +14,14 @@ int main()
     sf::Clock clock;
     auto* game = new Game(window);
     auto gameState = GameState::MENU;
-    MenuMain menu(window, &gameState);
-    MenuOver menuOver(window, &gameState);
+
+    struct WindowContext context = {
+        window,
+	    *game,
+	    gameState,
+    };
+    MenuMain menu(context);
+    MenuOver menuOver(context);
 
     window.setFramerateLimit(144);
 	

@@ -3,6 +3,6 @@
 class MenuMain : public Menu
 {
 public:
-	MenuMain(sf::RenderWindow& window, GameState* state);
+	MenuMain(WindowContext& context);
 };
 

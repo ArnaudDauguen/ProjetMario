@@ -4,7 +4,7 @@ ButtonQuit::ButtonQuit(const std::string& text, sf::Vector2f position, std::shar
 {
 }
 
-void ButtonQuit::Click(GameState* state)
+void ButtonQuit::Click(WindowContext& context)
 {
-	*state = GameState::QUIT;
+	context.state = GameState::QUIT;
 }

@@ -42,6 +42,6 @@ void EGoomba::calculateDeathCollisionBox()
 		this->m_sprite.getGlobalBounds().left,
 		this->m_sprite.getGlobalBounds().top,
 		this->m_sprite.getGlobalBounds().width,
-		std::max(2.f, std::min(2.f, this->m_sprite.getGlobalBounds().width * 0.1f))
+		std::max(10.f, this->m_sprite.getGlobalBounds().width * 0.25f)
 	);
 }

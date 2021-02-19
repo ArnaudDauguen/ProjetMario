@@ -4,6 +4,7 @@
 #include "Game.h"
 #include "GameState.h"
 #include "Menu/MenuMain.h"
+#include "Menu/MenuOver.h"
 #include "World.h"
 #include "Actors/Player.h"
 
@@ -14,13 +15,14 @@ int main()
     auto* game = new Game(window);
     auto gameState = GameState::MENU;
     MenuMain menu(window, &gameState);
+    MenuOver menuOver(window, &gameState);
 
     window.setFramerateLimit(144);
 	
     while (window.isOpen())
     {
         if (game->m_world->isLevelComplete() || game->m_player->isDead()) {
-            gameState = GameState::MENU;
+            gameState = GameState::OVER;
             delete game;
             game = new Game(window);
         }
@@ -32,14 +34,19 @@ int main()
                 window.close();
 
             if (gameState == GameState::GAME)
+            {
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
                     gameState = GameState::MENU;
                     delete game;
                     game = new Game(window);
                 }
-
+            }
+                
             if (gameState == GameState::MENU)
                 menu.handleInputs(&event);
+
+            if (gameState == GameState::OVER)
+                menuOver.handleInputs(&event);
         }
 
         window.clear();
@@ -59,6 +66,10 @@ int main()
 	            menu.update(deltaTime);
 	            menu.draw(deltaTime);
 	            break;
+            case GameState::OVER:
+                menuOver.update(deltaTime);
+                menuOver.draw(deltaTime);
+                break;
             case GameState::QUIT:
                 return 0;
         }

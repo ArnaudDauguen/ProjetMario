@@ -7,7 +7,7 @@ Menu::Menu(sf::RenderWindow& window, GameState* state): m_gameState(state), m_wi
 }
 
 void Menu::handleInputs(sf::Event* event)
-{
+{	
 	if (event->type == sf::Event::KeyReleased) {
 		switch (event->key.code)
 		{
@@ -20,6 +20,30 @@ void Menu::handleInputs(sf::Event* event)
 		case sf::Keyboard::Enter:
 		case sf::Keyboard::Space:
 			m_buttons.at(m_selectedButton)->Click(m_gameState);
+			break;
+		default:
+			break;
+		}
+	}
+
+	if (event->type == sf::Event::MouseMoved)
+	{
+		for (unsigned int i = 0; i < m_buttons.size(); ++i)
+		{
+			if (m_buttons[i]->GetBox().getGlobalBounds().contains({ static_cast<float>((*event).mouseMove.x), static_cast<float>((*event).mouseMove.y) }))
+				m_selectedButton = i;
+		}
+	}
+
+	if (event->type == sf::Event::MouseButtonPressed)
+	{
+		const auto mousePosition = sf::Mouse::getPosition(m_window);
+
+		switch (event->mouseButton.button)
+		{
+		case sf::Mouse::Left:
+			if (m_buttons[m_selectedButton]->GetBox().getGlobalBounds().contains({ static_cast<float>(mousePosition.x), static_cast<float>(mousePosition.y) }))
+				m_buttons.at(m_selectedButton)->Click(m_gameState);
 			break;
 		default:
 			break;

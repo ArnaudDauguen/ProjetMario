@@ -131,6 +131,8 @@ xcopy /y /d  "$(ProjectDir)SFML-2.5.1\bin\sfml-window-2.dll" "$(OutDir)"</Comman
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Actor.cpp" />
+    <ClCompile Include="Menu\MenuOver.cpp" />
+    <ClCompile Include="Menu\ButtonMenu.cpp" />
     <ClCompile Include="Menu\MenuMain.cpp" />
     <ClCompile Include="Menu\ButtonQuit.cpp" />
     <ClCompile Include="Menu\ButtonStart.cpp" />
@@ -149,6 +151,8 @@ xcopy /y /d  "$(ProjectDir)SFML-2.5.1\bin\sfml-window-2.dll" "$(OutDir)"</Comman
   <ItemGroup>
     <ClInclude Include="Actor.h" />
     <ClInclude Include="BlocksData.h" />
+    <ClInclude Include="Menu\MenuOver.h" />
+    <ClInclude Include="Menu\ButtonMenu.h" />
     <ClInclude Include="Menu\MenuMain.h" />
     <ClInclude Include="Menu\ButtonQuit.h" />
     <ClInclude Include="Menu\ButtonStart.h" />

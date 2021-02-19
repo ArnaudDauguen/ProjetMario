@@ -16,10 +16,10 @@ MenuOver::MenuOver(WindowContext& context): Menu(context)
 	title->setString("GAME OVER");
 	title->setFont(*m_font);
 	title->setPosition({ static_cast<float>(m_context.window.getSize().x) / 2.f,200.f });
-	title->setCharacterSize(45.f);
+	title->setCharacterSize(45);
 	title->setFillColor(sf::Color::Red);
 	title->setStyle(sf::Text::Underlined);
-	title->setOrigin({ title->getGlobalBounds().width / 2.f, title->getGlobalBounds().height / 2.f });
+	title->setOrigin({ static_cast<float>(title->getGlobalBounds().width) / 2.f, static_cast<float>(title->getGlobalBounds().height) / 2.f });
 
 	m_texts.push_back(title);
 }

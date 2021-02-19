@@ -25,15 +25,15 @@ MenuMain::MenuMain(WindowContext& context): Menu(context)
 	credits->setString("Arnaud Dauguen, Theo Hay, Justin Sella");
 	credits->setFont(*m_font);
 	credits->setPosition({ 10.f, 10.f });
-	credits->setCharacterSize(12.f);
+	credits->setCharacterSize(12);
 
 	auto* title = new sf::Text();
 	title->setFont(*m_font);
 	title->setString("Platformer");
-	title->setCharacterSize(60.f);
+	title->setCharacterSize(60);
 	title->setStyle(sf::Text::Underlined);
 	title->setOrigin({ title->getGlobalBounds().width / 2.f, title->getGlobalBounds().height / 2.f });
-	title->setPosition({ m_context.window.getSize().x / 2.f, 150.f });
+	title->setPosition({ static_cast<float>(m_context.window.getSize().x) / 2.f, 150.f });
 
 	m_texts.push_back(title);
 	m_texts.push_back(credits);

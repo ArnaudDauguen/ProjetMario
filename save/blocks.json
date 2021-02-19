@@ -23,13 +23,205 @@
 			"textureLocationId": 3,
 			"ignoreCollisions": false,
 			"isVictoryBlock": false
-		}, 
+		},
 		{
-		
-			"id": 4,
+
+			"id": 148,
 			"textureLocationId": 148,
 			"ignoreCollisions": true,
 			"isVictoryBlock": true
+		},
+		{
+			"id": 146,
+			"textureLocationId": 146,
+			"ignoreCollisions": false,
+			"isVictoryBlock": false
+		},
+		{
+			"id": 4,
+			"textureLocationId": 4,
+			"ignoreCollisions": false,
+			"isVictoryBlock": false
+		},
+		{
+			"id": 21,
+			"textureLocationId": 21,
+			"ignoreCollisions": false,
+			"isVictoryBlock": false
+		},
+		{
+			"id": 20,
+			"textureLocationId": 20,
+			"ignoreCollisions": false,
+			"isVictoryBlock": false
+		},
+		{
+			"id": 81,
+			"textureLocationId": 81,
+			"ignoreCollisions": true,
+			"isVictoryBlock": false
+		},
+		{
+			"id": 97,
+			"textureLocationId": 97,
+			"ignoreCollisions": true,
+			"isVictoryBlock": false
+		},
+		{
+			"id": 80,
+			"textureLocationId": 80,
+			"ignoreCollisions": true,
+			"isVictoryBlock": false
+		},
+		{
+			"id": 60,
+			"textureLocationId": 60,
+			"ignoreCollisions": false,
+			"isVictoryBlock": false
+		},
+		{
+			"id": 61,
+			"textureLocationId": 61,
+			"ignoreCollisions": false,
+			"isVictoryBlock": false
+		},
+		{
+			"id": 27,
+			"textureLocationId": 27,
+			"ignoreCollisions": false,
+			"isVictoryBlock": false
+		},
+		{
+			"id": 83,
+			"textureLocationId": 83,
+			"ignoreCollisions": true,
+			"isVictoryBlock": false
+		},
+		{
+			"id": 32,
+			"textureLocationId": 32,
+			"ignoreCollisions": false,
+			"isVictoryBlock": false
+		},
+		{
+			"id": 33,
+			"textureLocationId": 33,
+			"ignoreCollisions": false,
+			"isVictoryBlock": false
+		},
+		{
+			"id": 34,
+			"textureLocationId": 34,
+			"ignoreCollisions": false,
+			"isVictoryBlock": false
+		},
+		{
+			"id": 51,
+			"textureLocationId": 51,
+			"ignoreCollisions": false,
+			"isVictoryBlock": false
+		},
+		{
+			"id": 18,
+			"textureLocationId": 18,
+			"ignoreCollisions": false,
+			"isVictoryBlock": false
+		},
+		{
+			"id": 14,
+			"textureLocationId": 14,
+			"ignoreCollisions": true,
+			"isVictoryBlock": false
+		},
+		{
+			"id": 73,
+			"textureLocationId": 73,
+			"ignoreCollisions": true,
+			"isVictoryBlock": false
+		},
+		{
+			"id": 237,
+			"textureLocationId": 237,
+			"ignoreCollisions": true,
+			"isVictoryBlock": false
+		},
+		{
+			"id": 55,
+			"textureLocationId": 55,
+			"ignoreCollisions": true,
+			"isVictoryBlock": false
+		},
+		{
+			"id": 8,
+			"textureLocationId": 8,
+			"ignoreCollisions": false,
+			"isVictoryBlock": false
+		},
+		{
+			"id": 96,
+			"textureLocationId": 96,
+			"ignoreCollisions": true,
+			"isVictoryBlock": false
+		},
+		{
+			"id": 24,
+			"textureLocationId": 24,
+			"ignoreCollisions": false,
+			"isVictoryBlock": false
+		},
+		{
+			"id": 50,
+			"textureLocationId": 50,
+			"ignoreCollisions": false,
+			"isVictoryBlock": false
+		},
+		{
+			"id": 65,
+			"textureLocationId": 65,
+			"ignoreCollisions": false,
+			"isVictoryBlock": false
+		},
+		{
+			"id": 82,
+			"textureLocationId": 82,
+			"ignoreCollisions": false,
+			"isVictoryBlock": false
+		},
+		{
+			"id": 98,
+			"textureLocationId": 98,
+			"ignoreCollisions": false,
+			"isVictoryBlock": false
+		},
+		{
+			"id": 23,
+			"textureLocationId": 23,
+			"ignoreCollisions": false,
+			"isVictoryBlock": false
+		},
+		{
+			"id": 24,
+			"textureLocationId": 24,
+			"ignoreCollisions": false,
+			"isVictoryBlock": false
+		},
+		{
+			"id": 25,
+			"textureLocationId": 25,
+			"ignoreCollisions": false,
+			"isVictoryBlock": false
+		},
+		{
+			"id": 144,
+			"textureLocationId": 144,
+			"ignoreCollisions": false,
+			"isVictoryBlock": false
+		},
+		{
+			"id": 22,
+			"textureLocationId": 22,
+			"ignoreCollisions": false,
+			"isVictoryBlock": false
 		}
 	]
 }

@@ -27,6 +27,9 @@ EThwomp::EThwomp(Game* game, sf::Vector2f startingPosition, int textureIndex, sf
 
 void EThwomp::update(int deltaTime)
 {
+	if (this->m_isDead)
+		return;
+	
 	// Detect player
 	if(this->m_waitingForPlayer && this->isPlayerInRange())
 	{

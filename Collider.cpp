@@ -35,7 +35,7 @@ void Collider::getMapBlockOnPath(const int* numberOfStep, const World* world, sf
     for(int step = 0; step < *numberOfStep; step++)
     {
     	// for each points to check
-    	for(int i = 0; i < pointsToCheck.size(); ++i)
+    	for(unsigned int i = 0; i < pointsToCheck.size(); ++i)
     	{
             pointsToCheck[i] += oneStepTravelDistance;
             encounteredBlocks->at(i).push_back(world->PositionOnScreenToMapBlockIndex(pointsToCheck[i]));

@@ -3,6 +3,8 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/System/Vector2.hpp>
 
+
+#include "Game.h"
 #include "IDrawableObject.h"
 #include "IUpdatableObject.h"
 
@@ -20,9 +22,9 @@ public:
 		};
 	}
 	
-	void update(int deltaTime) override { this->applyGravity(deltaTime); };
+	void update(int deltaTime) override;
 	void draw(sf::RenderWindow& window) override;
-	bool mustDie() override { return m_isDead; }
+	virtual bool mustDie() { return m_isDead; }
 
 	virtual bool isColliding(sf::FloatRect* globalBoundToTest);
 	virtual bool isColliderInKillZone(sf::FloatRect* globalBoundToTest);

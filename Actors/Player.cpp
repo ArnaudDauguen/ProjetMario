@@ -22,6 +22,8 @@ Player::Player(Game* game, sf::Vector2f startingPosition, int textureIndex, sf::
 
 void Player::update(int deltaTime)
 {
+    if (this->m_isDead)
+        return;
     this->applyGravity(deltaTime);
     this->checkForCollisions();
 }
@@ -85,6 +87,8 @@ sf::Vector2f Player::applyGravity(int deltaTime)
     // Check if on ground
     const sf::Vector2f travelableDistance = this->calculateMovementVector(gravityVector);
     this->m_isOnGround = travelableDistance.y == 0.f;
+
+    this->isGoingBelowTheWorld();
 	
     return travelableDistance;
 }
@@ -122,13 +126,12 @@ void Player::jump()
     this->m_isOnGround = false;
 }
 
-bool Player::mustDie()
+void Player::downgrade()
 {
-    this->m_isDead =
-        this->evolutionStage <= 0
-        || this->m_game->m_world->PositionOnScreenToMapBlockIndex(this->m_sprite.getPosition()).y >= this->m_game->m_world->GetSize().y - 1;
-    return this->m_isDead;
+    --this->evolutionStage;
+    this->m_isDead = this->m_isDead || this->evolutionStage <= 0;
 }
+
 
 // check collisions with all other m_enemies in game
 void Player::checkForCollisions()
@@ -154,5 +157,11 @@ void Player::checkForCollisions()
     }
 }
 
+bool Player::isGoingBelowTheWorld()
+{
+    bool mustDie = this->m_game->m_world->PositionOnScreenToMapBlockIndex(this->m_sprite.getPosition()).y >= this->m_game->m_world->GetSize().y - 1;
+    this->m_isDead = this->m_isDead || mustDie;
+    return mustDie;
+}
 
 

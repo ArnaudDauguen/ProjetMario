@@ -44,8 +44,7 @@ Game::Game(sf::RenderWindow& window) : m_window(window)
 			{
 				player = new Player(this, { actor.spawnX, actor.spawnY });
 				this->m_player = std::make_shared<Player>(*player);
-				this->m_updatableObjects.push_back(this->m_player);
-				this->m_drawableObjects.push_back(this->m_player);
+				this->m_actors.push_back(this->m_player);
 				break;
 			}
 		case 1:
@@ -53,8 +52,7 @@ Game::Game(sf::RenderWindow& window) : m_window(window)
 				const auto goomba = new EGoomba(this, { actor.spawnX, actor.spawnY }, actor.textureLocationId, { 1.75f, 1.75f });
 				auto gb = std::make_shared<EGoomba>(*goomba);
 				this->m_enemies.push_back(gb);
-				this->m_updatableObjects.push_back(gb);
-				this->m_drawableObjects.push_back(gb);
+				this->m_actors.push_back(gb);
 				break;
 			}
 		case 2:
@@ -62,8 +60,7 @@ Game::Game(sf::RenderWindow& window) : m_window(window)
 				const auto thwomp = new EThwomp(this, { actor.spawnX, actor.spawnY }, actor.textureLocationId, { 3.75, 5.75 });
 				auto gb = std::make_shared<EThwomp>(*thwomp);
 				this->m_enemies.push_back(gb);
-				this->m_updatableObjects.push_back(gb);
-				this->m_drawableObjects.push_back(gb);
+				this->m_actors.push_back(gb);
 				break;
 			}
 		}
@@ -83,16 +80,9 @@ void Game::handleInputs(int deltaTime, sf::Event* event)
 
 void Game::update(int deltaTime)
 {
-	m_updatableObjects.erase(std::remove_if(m_updatableObjects.begin(), m_updatableObjects.end(), [](std::shared_ptr<IUpdatableObject> ele)->bool
-		{
-			return ele->mustDie();
-		}), m_updatableObjects.end());
-	m_enemies.erase(std::remove_if(m_enemies.begin(), m_enemies.end(), [](std::shared_ptr<Actor> ele)->bool
-		{
-			return ele->mustDie();
-		}), m_enemies.end());
-
-	for (const auto& obj : m_updatableObjects)
+	this->cleanupActors();
+	
+	for (const auto& obj : m_actors)
 	{
 		obj->update(deltaTime);
 	}
@@ -102,12 +92,7 @@ void Game::draw(int deltaTime)
 {
 	this->m_world->draw(this->m_window);
 	
-	m_drawableObjects.erase(std::remove_if(m_drawableObjects.begin(), m_drawableObjects.end(), [](std::shared_ptr<IDrawableObject> ele)->bool
-		{
-			return ele->mustDie();
-		}), m_drawableObjects.end());
-
-	for (const auto& obj : m_drawableObjects)
+	for (const auto& obj : m_actors)
 	{
 		obj->draw(this->m_window);
 	}
@@ -129,5 +114,18 @@ void Game::loadAllTextures()
 		}
 	}
 }
+
+void Game::cleanupActors()
+{
+	m_enemies.erase(std::remove_if(m_enemies.begin(), m_enemies.end(), [](std::shared_ptr<Actor> ele)->bool
+		{
+			return ele->isDead();
+		}), m_enemies.end());
+	m_actors.erase(std::remove_if(m_actors.begin(), m_actors.end(), [](std::shared_ptr<Actor> ele)->bool
+		{
+			return ele->isDead();
+		}), m_actors.end());
+}
+
 
 

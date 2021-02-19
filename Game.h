@@ -4,9 +4,13 @@
 
 class World;
 class Player;
-class IUpdatableObject;
-class IDrawableObject;
+class Actor;
 class Enemy;
+
+const int xTextureLength = 16;
+const int yTextureLength = 16;
+const int blockTextureLength = xTextureLength * yTextureLength;
+const int textureSizeOnImage = 16;
 
 class Game
 {
@@ -20,7 +24,9 @@ public:
 
 	World* m_world = nullptr;
 	std::shared_ptr<Player> m_player = nullptr;
-	std::vector<std::shared_ptr<Enemy>> m_enemies = std::vector<std::shared_ptr<Enemy>>();
+	std::vector<std::shared_ptr<Actor>> m_enemies = std::vector<std::shared_ptr<Actor>>();
+
+	void killActor(Actor* actorToDrop);
 	
 	sf::Vector2u GetScreenSize() const { return m_window.getSize(); }
 	
@@ -31,15 +37,23 @@ public:
 	sf::FloatRect m_screen;
 private:
 	sf::RenderWindow& m_window;
-	std::vector<std::shared_ptr<IUpdatableObject>> m_updatableObjects = std::vector<std::shared_ptr<IUpdatableObject>>();
-	std::vector<std::shared_ptr<IDrawableObject>> m_drawableObjects = std::vector<std::shared_ptr<IDrawableObject>>();
+	std::vector<std::shared_ptr<Actor>> m_actors = std::vector<std::shared_ptr<Actor>>();
 
-	const int m_xTextureLength = 16;
-	const int m_yTextureLength = 16;
-	const int m_textureSizeOnImage = 16;
-	const int m_blockTextureLength = this->m_xTextureLength * this->m_yTextureLength; // 256
-	sf::Texture m_blockTextures[256];
+	const int m_xTextureLength = xTextureLength;
+	const int m_yTextureLength = yTextureLength;
+	const int m_blockTextureLength = blockTextureLength;
+	sf::Texture m_blockTextures[blockTextureLength];
+	const int m_textureSizeOnImage = textureSizeOnImage;
 
 	void loadAllTextures();
+
+
+	std::vector<std::shared_ptr<Actor>>::iterator contains(Actor* block) {
+		return std::find_if(m_actors.begin(), m_actors.end(), [block](std::shared_ptr<Actor> const& i) {
+			return i.get() == block;
+		});
+	}
+
+	void cleanupActors();
 };
 

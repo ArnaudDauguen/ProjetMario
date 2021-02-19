@@ -3,7 +3,7 @@
 
 void Enemy::update(int deltaTime)
 {
-	if (this->mustDie())
+	if (this->m_isDead)
 		return;
 
 	this->applyGravity(deltaTime);

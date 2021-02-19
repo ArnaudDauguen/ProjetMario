@@ -7,6 +7,14 @@
 #include "World.h"
 #include "Game.h"
 
+void Actor::update(int deltaTime)
+{
+	if(this->m_isDead)
+        return;
+    this->applyGravity(deltaTime);
+}
+
+
 void Actor::draw(sf::RenderWindow& window)
 {
 	if(this->m_game->m_screen.intersects(this->m_sprite.getGlobalBounds()))

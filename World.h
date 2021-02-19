@@ -19,7 +19,6 @@ public:
 	// ~World();
 
 	void draw(sf::RenderWindow& window) override;
-	bool mustDie() override { return false; }
 
 	void FinishLevel() { this->isComplete = true; }
 	bool isLevelComplete() const { return this->isComplete; }
@@ -83,6 +82,7 @@ private:
 
 		std::string message = "Could not find block with id " + std::to_string(id);
 		Messager::ShowMessageAndExit(message.c_str());
+		return {};
 	}
 };
 

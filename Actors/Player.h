@@ -20,9 +20,9 @@ public:
 
 	void handleInputs(int deltaTime, sf::Event* event);
 	void update(int deltaTime) override;
-	bool mustDie() override;
 
-	void downgrade() { --this->evolutionStage; }
+	void downgrade();
+	bool isGoingBelowTheWorld();
 
 	sf::FloatRect getHitBox() const { return this->m_sprite.getGlobalBounds(); }
 	
